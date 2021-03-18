@@ -1,7 +1,7 @@
 # Documentation
 
 1 Discuss the assignment (and document this in the documentation-file), so you have a common picture of what you are building
-2 * Discuss (and document this in the documentation-file) the user experience (UX) the users should have when using the console application for the parking system:
+2 Discuss (and document this in the documentation-file) the user experience (UX) the users should have when using the console application for the parking system:
     What should be in the screen
   * Language of the application
   * How to interact with the application? mouse, keyboard, other
