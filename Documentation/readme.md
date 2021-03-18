@@ -17,6 +17,7 @@
 
 3 Discuss (and document this in the documentation-file) which data the system generate, and try to draw an ER-diagram of the data
   Nedan är våra klasser! där vissa kanske har Interfaces.
+  * Meny
   * SpaceCustomer
     * ID
   * SpaceShip
