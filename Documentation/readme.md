@@ -2,9 +2,9 @@
 
 1 Discuss the assignment (and document this in the documentation-file), so you have a common picture of what you are building
 2 Discuss (and document this in the documentation-file) the user experience (UX) the users should have when using the console application for the parking system:
-  A What should be in the screen
-  B Language of the application
-  C How to interact with the application? mouse, keyboard, other
+  *. What should be in the screen
+  *. Language of the application
+  *. How to interact with the application? mouse, keyboard, other
   D Is there a menu? Which options should it have
 3 Discuss (and document this in the documentation-file) which data the system generate, and try to draw an ER-diagram of the data
 4 Open the given solution-file in Visual Studio and add a new console application
