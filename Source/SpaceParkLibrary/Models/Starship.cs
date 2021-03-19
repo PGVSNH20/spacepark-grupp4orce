@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpaceParkLibrary.Models
 {
-    class Starship
+    public class Starship
     {
         // Rymdskepp har en ägare samt den plats den står på, ev. värde för kreditupplysning
         public int Id { get; set; }

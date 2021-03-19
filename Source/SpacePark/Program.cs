@@ -2,6 +2,7 @@
 using RestSharp;
 using SpacePark;
 using SpaceParkLibrary;
+using SpaceParkLibrary.Interfaces;
 using SpaceParkLibrary.Models;
 
 namespace SpacePark
@@ -10,12 +11,18 @@ namespace SpacePark
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+ 
+            var parkingHouse = new SpacePort();
+           
+            IFluentCustomer customer = new Customer(parkingHouse);
+            var vehicle = new Starship();
 
-            var customer = new Customer();
-
-            string inputName = Console.ReadLine();
-            customer.Name = inputName;
+            customer
+                .SelfRegistration()
+                .ParkShip(vehicle, DateTime.Now)
+                .LeavePark(DateTime.Now.AddHours(2))
+                .DisplayCreditWorthiness()
+                .ReciveInvoice();
             
             // Tjena tjabba hallå kära Jedis!
 
