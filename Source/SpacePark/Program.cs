@@ -1,5 +1,8 @@
 ﻿using System;
 using RestSharp;
+using SpacePark;
+using SpaceParkLibrary;
+using SpaceParkLibrary.Models;
 
 namespace SpacePark
 {
@@ -8,6 +11,12 @@ namespace SpacePark
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+
+            var customer = new Customer();
+
+            string inputName = Console.ReadLine();
+            customer.Name = inputName;
+            
             // Tjena tjabba hallå kära Jedis!
 
             // Testar//MAttias
