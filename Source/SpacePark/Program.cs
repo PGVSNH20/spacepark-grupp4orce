@@ -1,29 +1,44 @@
 ﻿using System;
+using System.Threading.Tasks;
 using RestSharp;
 using SpacePark;
 using SpaceParkLibrary;
 using SpaceParkLibrary.Models;
+using SpaceParkLibrary.Utilities;
 
 namespace SpacePark
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-
+           
             var customer = new Customer();
 
-            string inputName = Console.ReadLine();
-            customer.Name = inputName;
+
+            // Denna ger tillbaka myCustomerEnterTrueOrFalse = false
+            //string inputName = "Bosse";
+
+
+            // // Denna ger tillbaka myCustomerEnterTrueOrFalse = true
+            string inputName = "Luke";
+
             
-            // Tjena tjabba hallå kära Jedis!
+            
+            var myCustomerEnterTrueOrFalse = await CustomerValidator.NameValidator(inputName);
 
-            // Testar//MAttias
 
-            /*Patrik Testar
-             var client = new RestClient("https://swapi.dev/api/");
-             var request = new RestRequest("people/", DataFormat.Json);*/
+
+            //Objekt med alla skepp
+            var objectOfStarships = await CustomerValidator.GetAllStarships();
+
+            
+
+
+
         }
+
+        
+
     }
 }
