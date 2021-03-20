@@ -8,8 +8,8 @@ namespace SpaceParkLibrary.Models
 {
     class GateKeeper
     {
-        // GateKeepern är våran dörvakt som släpper in godkända gäster,
-        // och håller räkning på dem samt släper ut dem ifall kreditvärdighet uppnås
+        // GateKeepern är våran dörrvakt som släpper in godkända gäster,
+        // och håller räkning på dem samt släpper ut dem ifall kreditvärdighet uppnås
         // för att sedan skicka till ekonomiavdelningen för fakturering
 
 
