@@ -1,4 +1,5 @@
 ﻿using SpaceParkLibrary.Interfaces;
+using SpaceParkLibrary.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,16 @@ namespace SpaceParkLibrary.Models
 
         // Våran kund som parkerar med skepp, ankomstid och sluttid för parkering,
         // har kreditvärdighet, samt betalat faktura eller ej
+
+        public Customer()
+        {
+
+        }
         public Customer(SpacePort vistingParkingHouse)
         {
             this.parkingHouse = vistingParkingHouse;
             SpacePort.CustomerCounter++; // Räknar kunder så man får fram ifall huset är fullt
-            
+
         }
 
         public int Id { get; set; }
@@ -25,7 +31,7 @@ namespace SpaceParkLibrary.Models
 
         public Starship Starship { get; set; } // Vara eller icke vara?
 
-     
+
 
         public DateTime ArrivalTime { get; set; }
         public DateTime DepartureTime { get; set; }
@@ -36,10 +42,42 @@ namespace SpaceParkLibrary.Models
 
         public bool InvoicePaid { get; set; } // Vara eller icke vara?
 
-
-        public IFluentCustomer SelfRegistration()
+        public IFluentCustomer SelectStarship(List<StarshipResult> results)
+        {
+            Console.WriteLine("Var god och välj ett rymdskepp");
+            Console.WriteLine("------------------------------");
+            foreach (var ship in results)
+            {
+                Console.WriteLine(ship);
+            }
+            Console.WriteLine();
+            return this;
+        }
+        public IFluentCustomer VisitParkingHouse(SpacePort parkingHouse)
+        {
+            Console.WriteLine("Gästen besöker: " + parkingHouse.GetType()); //Måste få in namnet på P-huset här
+            return this;
+        }
+        public  IFluentCustomer SelfRegistration()
         {
             Console.WriteLine("Här registrerar vi Namn och skepp och är det godkända stegar vi vidare...");
+
+
+            // Denna ger tillbaka myCustomerEnterTrueOrFalse = false
+            // string inputName = "Bosse";
+
+
+            // Denna ger tillbaka myCustomerEnterTrueOrFalse = true
+            // string inputName = "Luke";
+
+            string inputName;
+            Console.WriteLine("Skriv in ditt namn: ");
+            inputName = Console.ReadLine();
+
+
+            //var myCustomerEnterTrueOrFalse = await CustomerValidator.NameValidator(inputName); // Måste få den att funka med IFluentCustomer som returmetod
+
+
             Console.WriteLine("Här valideras våra uppgifter av gateKeepern");
             return this;
         }
@@ -63,7 +101,7 @@ namespace SpaceParkLibrary.Models
             Console.WriteLine("Kreditvärdighet måste alltid kollas innan gästen lämnar...");
             return this;
         }
-      
+
         public IFluentCustomer ReceiveInvoice()
         {
             Console.WriteLine("InvoiceTracker skickar faktura till kunden baserad på planet te x");

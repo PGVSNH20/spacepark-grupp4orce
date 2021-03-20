@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using RestSharp;
 using SpacePark;
 using SpaceParkLibrary;
+using SpaceParkLibrary.Interfaces;
 using SpaceParkLibrary.Models;
 using SpaceParkLibrary.Utilities;
 
@@ -12,9 +13,28 @@ namespace SpacePark
     {
         static async Task Main(string[] args)
         {
-           
-            var customer = new Customer();
 
+            IFluentCustomer customer = new Customer();
+
+            // Objekt med alla skepp
+            var objectOfStarships = await CustomerValidator.GetAllStarships();
+
+
+            customer.SelectStarship(objectOfStarships.results);
+            //customer.SelectStarship(objectOfStarships)
+
+            var parkingHouse = new SpacePort();
+            //IFluentCustomer customer = new Customer(parkingHouse);
+
+            var vehicle = new Starship();
+
+            customer
+                .VisitParkingHouse(parkingHouse)
+                .SelfRegistration()
+                .ParkShip(vehicle, DateTime.Now)
+                .LeavePark(DateTime.Now.AddHours(2))
+                .DisplayCreditWorthiness()
+                .ReceiveInvoice();
 
             // Denna ger tillbaka myCustomerEnterTrueOrFalse = false
             //string inputName = "Bosse";
@@ -24,14 +44,9 @@ namespace SpacePark
             string inputName = "Luke";
 
             
-            
             var myCustomerEnterTrueOrFalse = await CustomerValidator.NameValidator(inputName);
-
-
-
-            //Objekt med alla skepp
-            var objectOfStarships = await CustomerValidator.GetAllStarships();
-
+          
+            // Vill få in Mattias namnvalidator i min selfregistrerare men den är inte async och måste returnera void inte IFluentCustomer, ev. en task måste läggas till
             
 
 

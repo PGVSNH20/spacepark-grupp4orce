@@ -1,4 +1,5 @@
 ﻿using SpaceParkLibrary.Models;
+using SpaceParkLibrary.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,8 @@ namespace SpaceParkLibrary.Interfaces
         bool CreditWorthiness { get; set; } // Kanske null direkt?
         bool SelfRegistered { get; set; }
 
-
+        IFluentCustomer SelectStarship(List<StarshipResult> starships);
+        IFluentCustomer VisitParkingHouse(SpacePort parkingHouse);
         IFluentCustomer SelfRegistration();
         IFluentCustomer ParkShip(Starship vechicle, DateTime arrivalTime);
         IFluentCustomer LeavePark(DateTime departureTime);
