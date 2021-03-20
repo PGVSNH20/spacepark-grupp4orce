@@ -13,10 +13,10 @@ namespace SpaceParkLibrary.Models
 
         private static byte _vacantParkingLotsCounter;
 
-        private static readonly byte maxiumParkingLots = 10;
+        private static readonly byte maximumParkingLots = 10;
 
         public string Name { get; set; }
-        public byte TotalParkingsLots { get; set; } = maxiumParkingLots;
+        public byte TotalParkingsLots { get; set; } = maximumParkingLots;
 
         public byte VacantParkingLots { get; set; }
 

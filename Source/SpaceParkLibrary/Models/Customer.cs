@@ -32,7 +32,7 @@ namespace SpaceParkLibrary.Models
 
         public bool CreditWorthiness { get; set; } // Kanske null direkt?
 
-        public bool SelfRegistrated { get; set; }
+        public bool SelfRegistered { get; set; }
 
         public bool InvoicePaid { get; set; } // Vara eller icke vara?
 
@@ -43,10 +43,10 @@ namespace SpaceParkLibrary.Models
             Console.WriteLine("Här valideras våra uppgifter av gateKeepern");
             return this;
         }
-        public IFluentCustomer ParkShip(Starship vechicle, DateTime arrivalTime)
+        public IFluentCustomer ParkShip(Starship vehicle, DateTime arrivalTime)
         {
-            this.Starship = vechicle;
-            Console.WriteLine("Här tildelas vi platsnummer och registreras i databasen...");
+            this.Starship = vehicle;
+            Console.WriteLine("Här tilldelar vi platsnummer och registrerar det i databasen...");
             Console.WriteLine("Här startas fejklockan...");
             return this;
         }
@@ -54,7 +54,7 @@ namespace SpaceParkLibrary.Models
         {
             Console.WriteLine("Här beslutar vi att hämta bilen och fejklockan stoppas...");
             Console.WriteLine("Är vi kreditvärdiga så genereras en faktura baserad på ankomsttid och avgångstid, adress lämnas här ev. ...");
-            Console.WriteLine("En ledigp lats registreras som öppen i P-huset...");
+            Console.WriteLine("En ledig plats registreras som öppen i P-huset...");
             SpacePort.CustomerCounter--;
             return this;
         }
@@ -64,7 +64,7 @@ namespace SpaceParkLibrary.Models
             return this;
         }
       
-        public IFluentCustomer ReciveInvoice()
+        public IFluentCustomer ReceiveInvoice()
         {
             Console.WriteLine("InvoiceTracker skickar faktura till kunden baserad på planet te x");
             return this;

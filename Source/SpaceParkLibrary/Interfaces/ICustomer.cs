@@ -15,14 +15,14 @@ namespace SpaceParkLibrary.Interfaces
         DateTime ArrivalTime { get; set; }
         DateTime DepartureTime { get; set; }
         bool CreditWorthiness { get; set; } // Kanske null direkt?
-        bool SelfRegistrated { get; set; }
+        bool SelfRegistered { get; set; }
 
 
         IFluentCustomer SelfRegistration();
         IFluentCustomer ParkShip(Starship vechicle, DateTime arrivalTime);
         IFluentCustomer LeavePark(DateTime departureTime);
         IFluentCustomer DisplayCreditWorthiness(); // Tar nog bort den här så får LeaveParksköta det ist
-        IFluentCustomer ReciveInvoice();
+        IFluentCustomer ReceiveInvoice();
 
 
     }

@@ -34,7 +34,6 @@ namespace SpaceParkLibrary.Utilities
             if(peopleResponse.count > 0)
             {
                  return validator.NameIsValid = true;
-                
             }
             else
             {
@@ -49,7 +48,7 @@ namespace SpaceParkLibrary.Utilities
         {
             var client = new RestClient("https://swapi.dev/api/");
             var request = new RestRequest("starships/", DataFormat.Json);
-            // NOTE: The Swreponse is a custom class which represents the data returned by the API, RestClient have buildin ORM which maps the data from the reponse into a given type of object
+            // NOTE: The Swresponse is a custom class which represents the data returned by the API, RestClient have buildin ORM which maps the data from the reponse into a given type of object
             var StarShipResponse = await client.GetAsync<StarshipResponse>(request);
 
 
