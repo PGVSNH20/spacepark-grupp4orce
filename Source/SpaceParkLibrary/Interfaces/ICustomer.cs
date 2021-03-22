@@ -19,8 +19,8 @@ namespace SpaceParkLibrary.Interfaces
         bool SelfRegistered { get; set; }
 
         IFluentCustomer SelectStarship(List<StarshipResult> starships);
-        IFluentCustomer VisitParkingHouse(SpacePort parkingHouse);
-        IFluentCustomer SelfRegistration();
+        IFluentCustomer VisitParkingHouse(ParkingHouse parkingHouse);
+        Task<IFluentCustomer> SelfRegistration();
         IFluentCustomer ParkShip(Starship vechicle, DateTime arrivalTime);
         IFluentCustomer LeavePark(DateTime departureTime);
         IFluentCustomer DisplayCreditWorthiness(); // Tar nog bort den här så får LeaveParksköta det ist
