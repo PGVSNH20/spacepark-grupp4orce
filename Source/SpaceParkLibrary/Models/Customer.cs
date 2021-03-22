@@ -35,11 +35,13 @@ namespace SpaceParkLibrary.Models
         public DateTime DepartureTime { get; set; }
 
         public int AssignedParkingLotNr { get; set; }
-        public bool CreditWorthiness { get; set; } // Kanske null direkt?
+
+        //public bool CreditWorthiness { get; set; } // Kanske null direkt?
 
         public bool SelfRegistered { get; set; }
 
-        public bool InvoicePaid { get; set; } // Vara eller icke vara?
+        public decimal InvoiceSum { get; set; }
+        //public bool InvoicePaid { get; set; } // Vara eller icke vara?
 
         public IFluentCustomer SelectStarship(List<StarshipResult> results)
         {
@@ -116,6 +118,7 @@ namespace SpaceParkLibrary.Models
         }
         public IFluentCustomer LeavePark(DateTime departureTime)
         {
+
             Console.WriteLine("Här beslutar vi att hämta bilen och fejklockan stoppas...");
             Console.WriteLine("Är vi kreditvärdiga så genereras en faktura baserad på ankomsttid och avgångstid, adress lämnas här ev. ...");
             Console.WriteLine("En ledig plats registreras som öppen i P-huset...");

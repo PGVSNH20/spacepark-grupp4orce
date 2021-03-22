@@ -21,11 +21,11 @@ namespace SpacePark
 
             var test = objectOfStarships.results[0];
 
-            var skepp = new Starship();
-            skepp.Id = objectOfStarships.results.IndexOf(test);
-            skepp.Name = test.name;
+            //var skepp = new Starship();
+            //skepp.Id = objectOfStarships.results.IndexOf(test);
+            //skepp.Name = test.name;
 
-            Console.WriteLine(skepp.Name);
+            //Console.WriteLine(skepp.Name);
 
             customer.SelectStarship(objectOfStarships.results);
             //customer.SelectStarship(objectOfStarships)
@@ -39,10 +39,12 @@ namespace SpacePark
                 .VisitParkingHouse(spacePort)
                 .SelfRegistration().Wait();
 
-            customer.ParkShip(vehicle, DateTime.Now)
-                .LeavePark(DateTime.Now.AddHours(2))
-                .DisplayCreditWorthiness()
-                .ReceiveInvoice();
+            customer
+                .ParkShip(vehicle, DateTime.Now)
+                .LeavePark(DateTime.Now.AddHours(2));
+               
+            //.DisplayCreditWorthiness()
+                //.ReceiveInvoice();
 
             // Denna ger tillbaka myCustomerEnterTrueOrFalse = false
             //string inputName = "Bosse";
@@ -51,17 +53,17 @@ namespace SpacePark
             // // Denna ger tillbaka myCustomerEnterTrueOrFalse = true
             string inputName = "Luke";
 
-            
+
             var myCustomerEnterTrueOrFalse = await CustomerValidator.NameValidator(inputName);
-          
+
             // Vill få in Mattias namnvalidator i min selfregistrerare men den är inte async och måste returnera void inte IFluentCustomer, ev. en task måste läggas till
-            
+
 
 
 
         }
 
-        
+
 
     }
 }
