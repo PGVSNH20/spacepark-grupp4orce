@@ -12,5 +12,6 @@ namespace SpaceParkLibrary.Models
         public int Id { get; set; }
         public int OwnerId { get; set; }
         public object DesignatedParkingLot { get; set; }
+        public string Name { get; set; }
     }
 }

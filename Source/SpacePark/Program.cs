@@ -19,6 +19,13 @@ namespace SpacePark
             // Objekt med alla skepp
             var objectOfStarships = await CustomerValidator.GetAllStarships();
 
+            var test = objectOfStarships.results[0];
+
+            var skepp = new Starship();
+            skepp.Id = objectOfStarships.results.IndexOf(test);
+            skepp.Name = test.name;
+
+            Console.WriteLine(skepp.Name);
 
             customer.SelectStarship(objectOfStarships.results);
             //customer.SelectStarship(objectOfStarships)
