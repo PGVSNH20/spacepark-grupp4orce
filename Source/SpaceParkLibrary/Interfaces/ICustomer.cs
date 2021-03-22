@@ -15,7 +15,7 @@ namespace SpaceParkLibrary.Interfaces
         Starship Starship { get; set; }
         DateTime ArrivalTime { get; set; }
         DateTime DepartureTime { get; set; }
-        bool CreditWorthiness { get; set; } // Kanske null direkt?
+        //bool CreditWorthiness { get; set; } // Kanske null direkt?
         bool SelfRegistered { get; set; }
 
         IFluentCustomer SelectStarship(List<StarshipResult> starships);

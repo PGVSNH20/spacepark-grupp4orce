@@ -29,7 +29,11 @@ namespace SpaceParkLibrary.Models
         public bool Vacancy { get; set; }
 
         List<ParkingLot> ParkingLots { get; set; }
-        List<Char> Sections { get; set; } = new List<char>() { 'A', 'B', 'C', 'D' };
+
+
+
+
+        //List<Char> Sections { get; set; } = new List<char>() { 'A', 'B', 'C', 'D' };
 
     }
 }
