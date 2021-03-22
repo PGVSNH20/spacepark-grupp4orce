@@ -43,22 +43,38 @@ namespace SpaceParkLibrary.Models
         public decimal InvoiceSum { get; set; }
         //public bool InvoicePaid { get; set; } // Vara eller icke vara?
 
-        public IFluentCustomer SelectStarship(List<StarshipResult> results)
+        public async Task<IFluentCustomer> SelectStarship()
         {
             byte index = 0;
-        
-            Console.WriteLine("Var god och välj ett rymdskepp");
-            Console.WriteLine("------------------------------");
-            foreach (var ship in results)
+
+            for (int i = 0; i < 4; i++)
             {
-                index++;
-                Console.WriteLine($"[{index}]\t{ship.name}");
+                var objectOfStarships = await CustomerValidator.GetAllStarships(i + 1);
+                var ships = objectOfStarships.results;
+
+                Console.WriteLine("Var god och välj ett rymdskepp");
+                Console.WriteLine("------------------------------");
+                foreach (var ship in ships)
+                {
+                    index++;
+                    Console.WriteLine($"[{index}]\t{ship.name}");
+                }
+              
+
+                Console.WriteLine("Bläddra genom piltangent");
+                int input = int.Parse(Console.ReadLine());
+                if (input == 2)
+                {
+                    continue;
+                }
+                else
+                Console.WriteLine("Välj ett skepp genom nummer: ");
+
+                byte choosenStarship = byte.Parse(Console.ReadLine());
+
+                this.Starship = new Starship(2342342, ships[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
             }
-
-            Console.WriteLine("Välj ett skepp genom nummer: ");
-            byte choosenStarship = byte.Parse(Console.ReadLine());
-
-            this.Starship = new Starship(2342342, results[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
+            
 
 
             return this;

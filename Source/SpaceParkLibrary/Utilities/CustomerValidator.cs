@@ -45,11 +45,11 @@ namespace SpaceParkLibrary.Utilities
         }
 
 
-        public static async Task<StarshipResponse> GetAllStarships()
+        public static async Task<StarshipResponse> GetAllStarships(int changePage)
         {
 
             var test = new CustomerValidator();
-            test.PageSpaceship = 1;
+            test.PageSpaceship = changePage;
             var client = new RestClient("https://swapi.dev/api/");
             var request = new RestRequest("starships/", DataFormat.Json).AddParameter("page", test.PageSpaceship);
             // NOTE: The Swresponse is a custom class which represents the data returned by the API, RestClient have buildin ORM which maps the data from the reponse into a given type of object

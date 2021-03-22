@@ -17,8 +17,8 @@ namespace SpacePark
             IFluentCustomer customer = new Customer();
 
             // Objekt med alla skepp
-            var objectOfStarships = await CustomerValidator.GetAllStarships();
-            customer.SelectStarship(objectOfStarships.results);
+          
+            customer.SelectStarship().Wait();
             
             var vehicle = customer.Starship;
 
