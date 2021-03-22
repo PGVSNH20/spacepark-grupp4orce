@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpaceParkLibrary.Models
 {
-    public class SpacePort
+    public class ParkingHouse
     {
         // Parkeringshus, totala platser, lista med platser
         // Samt räknare för lediga platser som skickas till dörrvakten
@@ -15,6 +15,10 @@ namespace SpaceParkLibrary.Models
 
         private static readonly byte maximumParkingLots = 10;
 
+        public ParkingHouse(string name)
+        {
+            Name = name;
+        }
         public string Name { get; set; }
         public byte TotalParkingsLots { get; set; } = maximumParkingLots;
 

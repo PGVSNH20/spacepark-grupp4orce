@@ -23,15 +23,16 @@ namespace SpacePark
             customer.SelectStarship(objectOfStarships.results);
             //customer.SelectStarship(objectOfStarships)
 
-            var parkingHouse = new SpacePort();
+            var spacePort = new ParkingHouse("Space Port");
             //IFluentCustomer customer = new Customer(parkingHouse);
 
-            var vehicle = new Starship();
+            var vehicle = customer.Starship;
 
             customer
-                .VisitParkingHouse(parkingHouse)
-                .SelfRegistration()
-                .ParkShip(vehicle, DateTime.Now)
+                .VisitParkingHouse(spacePort)
+                .SelfRegistration().Wait();
+
+            customer.ParkShip(vehicle, DateTime.Now)
                 .LeavePark(DateTime.Now.AddHours(2))
                 .DisplayCreditWorthiness()
                 .ReceiveInvoice();

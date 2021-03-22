@@ -10,7 +10,7 @@ namespace SpaceParkLibrary.Models
 {
     public class Customer : IFluentCustomer
     {
-        private SpacePort parkingHouse;
+        private ParkingHouse parkingHouse;
 
         // Våran kund som parkerar med skepp, ankomstid och sluttid för parkering,
         // har kreditvärdighet, samt betalat faktura eller ej
@@ -19,10 +19,10 @@ namespace SpaceParkLibrary.Models
         {
 
         }
-        public Customer(SpacePort vistingParkingHouse)
+        public Customer(ParkingHouse vistingParkingHouse)
         {
             this.parkingHouse = vistingParkingHouse;
-            SpacePort.CustomerCounter++; // Räknar kunder så man får fram ifall huset är fullt
+            ParkingHouse.CustomerCounter++; // Räknar kunder så man får fram ifall huset är fullt
 
         }
 
@@ -31,11 +31,10 @@ namespace SpaceParkLibrary.Models
 
         public Starship Starship { get; set; } // Vara eller icke vara?
 
-
-
         public DateTime ArrivalTime { get; set; }
         public DateTime DepartureTime { get; set; }
 
+        public int AssignedParkingLotNr { get; set; }
         public bool CreditWorthiness { get; set; } // Kanske null direkt?
 
         public bool SelfRegistered { get; set; }
@@ -44,47 +43,74 @@ namespace SpaceParkLibrary.Models
 
         public IFluentCustomer SelectStarship(List<StarshipResult> results)
         {
+            byte index = 0;
+        
             Console.WriteLine("Var god och välj ett rymdskepp");
             Console.WriteLine("------------------------------");
             foreach (var ship in results)
             {
-                Console.WriteLine(ship);
+                index++;
+                Console.WriteLine($"[{index}]\t{ship.name}");
             }
-            Console.WriteLine();
+
+            Console.WriteLine("Välj ett skepp genom nummer: ");
+            byte choosenStarship = byte.Parse(Console.ReadLine());
+
+            this.Starship = new Starship(2342342, results[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
+
+
             return this;
         }
-        public IFluentCustomer VisitParkingHouse(SpacePort parkingHouse)
+        public IFluentCustomer VisitParkingHouse(ParkingHouse parkingHouse)
         {
-            Console.WriteLine("Gästen besöker: " + parkingHouse.GetType()); //Måste få in namnet på P-huset här
+            Console.WriteLine("Gästen besöker: " + parkingHouse.Name); //Måste få in namnet på P-huset här
             return this;
         }
-        public  IFluentCustomer SelfRegistration()
+        public async Task< IFluentCustomer> SelfRegistration()
         {
             Console.WriteLine("Här registrerar vi Namn och skepp och är det godkända stegar vi vidare...");
 
+            string inputName = string.Empty;
+   
+            bool validated = false;
 
-            // Denna ger tillbaka myCustomerEnterTrueOrFalse = false
-            // string inputName = "Bosse";
+            while (validated == false)
+            {
+            
+                Console.WriteLine("Skriv in ditt namn: ");
+                inputName = Console.ReadLine();
 
-
-            // Denna ger tillbaka myCustomerEnterTrueOrFalse = true
-            // string inputName = "Luke";
-
-            string inputName;
-            Console.WriteLine("Skriv in ditt namn: ");
-            inputName = Console.ReadLine();
-
-
-            //var myCustomerEnterTrueOrFalse = await CustomerValidator.NameValidator(inputName); // Måste få den att funka med IFluentCustomer som returmetod
+                validated  = await CustomerValidator.NameValidator(inputName);
 
 
-            Console.WriteLine("Här valideras våra uppgifter av gateKeepern");
+                string message;
+                message= (validated) ? "Valid name": "Invalid name";
+
+                Console.WriteLine();
+                Console.WriteLine(message);
+                Console.WriteLine();
+            }
+
+            // Ifall loopen stegas  ur är vi fullt validerade
+            this.Name = inputName;
+            this.Id = 0001;             // Här ska vi kanske slumpa fram ett unikt id nummer
+            
+                // Här registreras troligtvis skeppet på något sätt
+
+            //Person
+
             return this;
         }
+
+     
         public IFluentCustomer ParkShip(Starship vehicle, DateTime arrivalTime)
         {
-            this.Starship = vehicle;
+       
             Console.WriteLine("Här tilldelar vi platsnummer och registrerar det i databasen...");
+
+            this.AssignedParkingLotNr = 1; // Random nr här
+
+
             Console.WriteLine("Här startas fejklockan...");
             return this;
         }
@@ -93,7 +119,7 @@ namespace SpaceParkLibrary.Models
             Console.WriteLine("Här beslutar vi att hämta bilen och fejklockan stoppas...");
             Console.WriteLine("Är vi kreditvärdiga så genereras en faktura baserad på ankomsttid och avgångstid, adress lämnas här ev. ...");
             Console.WriteLine("En ledig plats registreras som öppen i P-huset...");
-            SpacePort.CustomerCounter--;
+            ParkingHouse.CustomerCounter--;
             return this;
         }
         public IFluentCustomer DisplayCreditWorthiness()
