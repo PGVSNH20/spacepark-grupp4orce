@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpaceParkLibrary.Models
 {
-    class ParkingLot
+    public class ParkingLot
     {
         public int Id { get; set; }
         //public char SectionId { get; set; }

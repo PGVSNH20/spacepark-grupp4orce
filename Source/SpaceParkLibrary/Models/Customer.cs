@@ -10,7 +10,7 @@ namespace SpaceParkLibrary.Models
 {
     public class Customer : IFluentCustomer
     {
-        private ParkingHouse parkingHouse;
+        private ParkingHouse _parkingHouse;
 
         // Våran kund som parkerar med skepp, ankomstid och sluttid för parkering,
         // har kreditvärdighet, samt betalat faktura eller ej
@@ -21,7 +21,7 @@ namespace SpaceParkLibrary.Models
         }
         public Customer(ParkingHouse vistingParkingHouse)
         {
-            this.parkingHouse = vistingParkingHouse;
+            this._parkingHouse = vistingParkingHouse;
             ParkingHouse.CustomerCounter++; // Räknar kunder så man får fram ifall huset är fullt
 
         }
@@ -34,7 +34,7 @@ namespace SpaceParkLibrary.Models
         public DateTime ArrivalTime { get; set; }
         public DateTime DepartureTime { get; set; }
 
-        public int AssignedParkingLotNr { get; set; }
+        public ParkingLot AssignedParkingLot { get; set; }
 
         //public bool CreditWorthiness { get; set; } // Kanske null direkt?
 
@@ -61,18 +61,19 @@ namespace SpaceParkLibrary.Models
                 }
               
 
-                Console.WriteLine("Bläddra genom piltangent");
-                int input = int.Parse(Console.ReadLine());
-                if (input == 2)
-                {
-                    continue;
-                }
-                else
+                //Console.WriteLine("Bläddra genom piltangent");
+                //int input = int.Parse(Console.ReadLine());
+                //if (input == 2)
+                //{
+                //    continue;
+                //}
+                //else
                 Console.WriteLine("Välj ett skepp genom nummer: ");
 
                 byte choosenStarship = byte.Parse(Console.ReadLine());
 
                 this.Starship = new Starship(2342342, ships[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
+                break;
             }
             
 
@@ -81,7 +82,11 @@ namespace SpaceParkLibrary.Models
         }
         public IFluentCustomer VisitParkingHouse(ParkingHouse parkingHouse)
         {
-            Console.WriteLine("Gästen besöker: " + parkingHouse.Name); //Måste få in namnet på P-huset här
+            _parkingHouse = parkingHouse;
+            Console.WriteLine("Gästen besöker: " + _parkingHouse.Name); //Måste få in namnet på P-huset här
+
+            Console.WriteLine($"Lediga platser: {_parkingHouse.VacantParkingLots} av totala maxkapaciteten {_parkingHouse.TotalParkingsLots}");
+            
             return this;
         }
         public async Task< IFluentCustomer> SelfRegistration()
@@ -126,10 +131,17 @@ namespace SpaceParkLibrary.Models
        
             Console.WriteLine("Här tilldelar vi platsnummer och registrerar det i databasen...");
 
-            this.AssignedParkingLotNr = 1; // Random nr här
+            this.AssignedParkingLot = this._parkingHouse.GetEmptyParkingLot();  //Tilldelar ledig plats
+
+            Console.WriteLine($"Välkommen {Name}!");
+            Console.WriteLine($"Din {Starship.Name} är parkerad på plats {AssignedParkingLot.Id} och därmed är den klassas som occupied: {AssignedParkingLot.Occupied}");
+            Console.WriteLine("Antal lediga platser för nuvarande är: " + _parkingHouse.VacantParkingLots);
+
 
 
             Console.WriteLine("Här startas fejklockan...");
+
+
             return this;
         }
         public IFluentCustomer LeavePark(DateTime departureTime)
