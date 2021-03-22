@@ -9,9 +9,14 @@ namespace SpaceParkLibrary.Models
     class ParkingLot
     {
         public int Id { get; set; }
-        public char SectionId { get; set; }
+        //public char SectionId { get; set; }
 
         public bool Occupied { get; set; }
 
+        public ParkingLot(int id, bool occupied)
+        {
+            Id = id;
+            Occupied = occupied;
+        }
     }
 }

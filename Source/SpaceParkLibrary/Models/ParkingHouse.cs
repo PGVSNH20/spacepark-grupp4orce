@@ -20,7 +20,7 @@ namespace SpaceParkLibrary.Models
             Name = name;
         }
         public string Name { get; set; }
-        public byte TotalParkingsLots { get; set; } = maximumParkingLots;
+        public byte TotalParkingsLots { get; set; } = (byte)parkingsLots.Count;
 
         public byte VacantParkingLots { get; set; }
 
@@ -30,7 +30,14 @@ namespace SpaceParkLibrary.Models
 
         List<ParkingLot> ParkingLots { get; set; }
 
+        private static List<ParkingLot> parkingsLots = new List<ParkingLot>
+        {
+             //new ParkingLot(1, ),
+             //new ParkingLot(),
+             //new ParkingLot(),
+             //new ParkingLot(),
 
+        };
 
 
         //List<Char> Sections { get; set; } = new List<char>() { 'A', 'B', 'C', 'D' };
