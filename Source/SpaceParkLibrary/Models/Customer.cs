@@ -37,7 +37,7 @@ namespace SpaceParkLibrary.Models
         public int AssignedParkingLotNr { get; set; }
         public bool CreditWorthiness { get; set; } // Kanske null direkt?
 
-        public bool SelfRegistered { get; set; }
+        public bool SelfRegistered { get; set; } // Vad menas med denna?
 
         public bool InvoicePaid { get; set; } // Vara eller icke vara?
 
