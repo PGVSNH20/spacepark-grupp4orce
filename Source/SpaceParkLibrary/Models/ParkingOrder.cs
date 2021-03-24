@@ -16,8 +16,5 @@ namespace SpaceParkLibrary.Models
 
         public ParkingLot AssignedParkingLot { get; set; } // Ska vi bara skicka in idnummret som en int istället för objektet
         public decimal ParkingFee  { get; set; }
-    
-
-
     }
 }

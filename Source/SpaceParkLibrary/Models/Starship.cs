@@ -16,7 +16,10 @@ namespace SpaceParkLibrary.Models
         //public int OwnerId { get; set; }
         //public object DesignatedParkingLot { get; set; }
 
+        public Starship()
+        {
 
+        }
         public Starship(string reg, string name )
         {
             RegistrationNumber = reg;

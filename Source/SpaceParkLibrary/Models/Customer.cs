@@ -2,6 +2,8 @@
 using SpaceParkLibrary.Utilities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ namespace SpaceParkLibrary.Models
     public class Customer : IFluentCustomer
     {
         private ParkingHouse _parkingHouse;
+        
 
         // Våran kund som parkerar med skepp, ankomstid och sluttid för parkering,
         // har kreditvärdighet, samt betalat faktura eller ej
@@ -27,11 +30,12 @@ namespace SpaceParkLibrary.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public Starship Starship { get; set; }
         public bool InvoicePaid { get; set; } // Vara eller icke vara?
 
         ParkingOrder parkingOrder = new ParkingOrder();
 
-        public async Task<IFluentCustomer> SelectStarship(Starship starship)
+        public async Task<IFluentCustomer> SelectStarship()
         {
             byte index = 0;
 
@@ -60,7 +64,7 @@ namespace SpaceParkLibrary.Models
                 byte choosenStarship = byte.Parse(Console.ReadLine());
 
                 // Kunden för skriva in sitt egna regnummber
-                starship = new Starship("ABC123", ships[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
+                this.Starship = new Starship("ABC123", ships[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
                 break;
             }
 

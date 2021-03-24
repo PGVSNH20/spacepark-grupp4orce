@@ -13,8 +13,9 @@ namespace SpaceParkLibrary.Interfaces
         int Id { get; set; }
         string Name { get; set; }
         public string Email { get; set; }
-     
-        Task<IFluentCustomer> SelectStarship(Starship starship);
+        public Starship Starship { get; set; }
+
+        Task<IFluentCustomer> SelectStarship();
         IFluentCustomer VisitParkingHouse(ParkingHouse parkingHouse);
         Task<IFluentCustomer> SelfRegistration(Starship starship, ParkingOrder parkingOrder);
         IFluentCustomer ParkShip(Starship vechicle, DateTime arrivalTime, ParkingOrder parkingOrder);

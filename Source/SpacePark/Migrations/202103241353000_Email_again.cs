@@ -1,0 +1,18 @@
+﻿namespace UI.Migrations
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Email_again : DbMigration
+    {
+        public override void Up()
+        {
+            AddColumn("dbo.Customers", "Email", c => c.String());
+        }
+        
+        public override void Down()
+        {
+            DropColumn("dbo.Customers", "Email");
+        }
+    }
+}
