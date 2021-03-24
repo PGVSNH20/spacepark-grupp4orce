@@ -12,17 +12,13 @@ namespace SpaceParkLibrary.Interfaces
     {
         int Id { get; set; }
         string Name { get; set; }
-        //Starship Starship { get; set; }
-        //DateTime ArrivalTime { get; set; }
-        //DateTime DepartureTime { get; set; }
-        //bool CreditWorthiness { get; set; } // Kanske null direkt?
-        bool SelfRegistered { get; set; }
-
+        public string Email { get; set; }
+     
         Task<IFluentCustomer> SelectStarship(Starship starship);
         IFluentCustomer VisitParkingHouse(ParkingHouse parkingHouse);
-        Task<IFluentCustomer> SelfRegistration(ParkingOrder parkingOrder, Starship starship);
-        IFluentCustomer ParkShip(Starship vechicle, DateTime arrivalTime);
-        IFluentCustomer LeavePark(DateTime departureTime);
+        Task<IFluentCustomer> SelfRegistration(Starship starship, ParkingOrder parkingOrder);
+        IFluentCustomer ParkShip(Starship vechicle, DateTime arrivalTime, ParkingOrder parkingOrder);
+        IFluentCustomer LeavePark(DateTime departureTime, ParkingOrder parkingOrder);
         IFluentCustomer DisplayCreditWorthiness(); // Tar nog bort den här så får LeaveParksköta det ist
         IFluentCustomer ReceiveInvoice();
 

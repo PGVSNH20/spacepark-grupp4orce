@@ -8,14 +8,15 @@ namespace SpaceParkLibrary.Models
 {
     public class ParkingOrder
     {
-        public Starship Starship { get; set; } // Vara eller icke vara?
-
+        public int Id { get; set; }
+        public Customer CustomerId { get; set; } // Ska vi bara skicka in idnummret som en int istället för objektet
+        public Starship StarshipId { get; set; } // Ska vi bara skicka in idnummret som en int istället för objektet
         public DateTime ArrivalTime { get; set; }
         public DateTime DepartureTime { get; set; }
 
-        public ParkingLot AssignedParkingLot { get; set; }
+        public ParkingLot AssignedParkingLot { get; set; } // Ska vi bara skicka in idnummret som en int istället för objektet
         public decimal ParkingFee  { get; set; }
-        public int Id { get; set; }
+    
 
 
     }

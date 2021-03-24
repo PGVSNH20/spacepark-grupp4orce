@@ -10,16 +10,16 @@ namespace SpaceParkLibrary.Models
     {
         // Rymdskepp har en ägare samt den plats den står på, ev. värde för kreditupplysning
         public int Id { get; set; }
-        public int VIN { get; set; } // Veichle identity number, chassie number
+        public string RegistrationNumber { get; set; } // Veichle identity number, chassie number
         public string Name { get; set; }
 
         //public int OwnerId { get; set; }
         //public object DesignatedParkingLot { get; set; }
 
 
-        public Starship(int vin, string name )
+        public Starship(string reg, string name )
         {
-            VIN = vin;
+            RegistrationNumber = reg;
             Name = name;
         }
     }
