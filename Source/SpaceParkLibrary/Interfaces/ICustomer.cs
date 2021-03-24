@@ -12,9 +12,9 @@ namespace SpaceParkLibrary.Interfaces
     {
         int Id { get; set; }
         string Name { get; set; }
-        Starship Starship { get; set; }
-        DateTime ArrivalTime { get; set; }
-        DateTime DepartureTime { get; set; }
+        //Starship Starship { get; set; }
+        //DateTime ArrivalTime { get; set; }
+        //DateTime DepartureTime { get; set; }
         //bool CreditWorthiness { get; set; } // Kanske null direkt?
         bool SelfRegistered { get; set; }
 

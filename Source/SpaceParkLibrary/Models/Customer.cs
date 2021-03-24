@@ -28,20 +28,16 @@ namespace SpaceParkLibrary.Models
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Email { get; set; }
 
-        public Starship Starship { get; set; } // Vara eller icke vara?
 
-        public DateTime ArrivalTime { get; set; }
-        public DateTime DepartureTime { get; set; }
-
-        public ParkingLot AssignedParkingLot { get; set; }
 
         //public bool CreditWorthiness { get; set; } // Kanske null direkt?
 
-        public bool SelfRegistered { get; set; } // Vad menas med denna?
+        //public bool SelfRegistered { get; set; } // Vad menas med denna?
 
-        public decimal InvoiceSum { get; set; }
-        //public bool InvoicePaid { get; set; } // Vara eller icke vara?
+        //public decimal InvoiceSum { get; set; }
+        public bool InvoicePaid { get; set; } // Vara eller icke vara?
 
         public async Task<IFluentCustomer> SelectStarship()
         {
