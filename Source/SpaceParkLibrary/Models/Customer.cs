@@ -22,24 +22,14 @@ namespace SpaceParkLibrary.Models
         public Customer(ParkingHouse vistingParkingHouse)
         {
             this._parkingHouse = vistingParkingHouse;
-            ParkingHouse.CustomerCounter++; // Räknar kunder så man får fram ifall huset är fullt
-
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-
-
-
-        //public bool CreditWorthiness { get; set; } // Kanske null direkt?
-
-        //public bool SelfRegistered { get; set; } // Vad menas med denna?
-
-        //public decimal InvoiceSum { get; set; }
         public bool InvoicePaid { get; set; } // Vara eller icke vara?
 
-        public async Task<IFluentCustomer> SelectStarship()
+        public async Task<IFluentCustomer> SelectStarship(Starship starship)
         {
             byte index = 0;
 
@@ -56,7 +46,6 @@ namespace SpaceParkLibrary.Models
                     Console.WriteLine($"[{index}]\t{ship.name}");
                 }
               
-
                 //Console.WriteLine("Bläddra genom piltangent");
                 //int input = int.Parse(Console.ReadLine());
                 //if (input == 2)
@@ -68,11 +57,9 @@ namespace SpaceParkLibrary.Models
 
                 byte choosenStarship = byte.Parse(Console.ReadLine());
 
-                this.Starship = new Starship(2342342, ships[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
+                starship = new Starship(2342342, ships[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
                 break;
             }
-            
-
 
             return this;
         }
@@ -85,7 +72,7 @@ namespace SpaceParkLibrary.Models
             
             return this;
         }
-        public async Task< IFluentCustomer> SelfRegistration()
+        public async Task< IFluentCustomer> SelfRegistration(ParkingOrder parkingOrder, Starship starship)
         {
             Console.WriteLine("Här registrerar vi Namn och skepp och är det godkända stegar vi vidare...");
 
@@ -95,12 +82,10 @@ namespace SpaceParkLibrary.Models
 
             while (validated == false)
             {
-            
                 Console.WriteLine("Skriv in ditt namn: ");
                 inputName = Console.ReadLine();
 
                 validated  = await CustomerValidator.NameValidator(inputName);
-
 
                 string message;
                 message= (validated) ? "Valid name": "Invalid name";
@@ -112,9 +97,14 @@ namespace SpaceParkLibrary.Models
 
             // Ifall loopen stegas  ur är vi fullt validerade
             this.Name = inputName;
-            this.Id = 0001;             // Här ska vi kanske slumpa fram ett unikt id nummer
+			Console.WriteLine("Submit your information");
+            this.Email = Console.ReadLine();
+            InvoicePaid = false;
+            //Kolla om kunden finns i databasen
+            //Om kunden inte existerar
+            //Lägg till kunden till databasen
             
-                // Här registreras troligtvis skeppet på något sätt
+            // Här registreras troligtvis skeppet på något sätt
 
             //Person
 
@@ -124,7 +114,6 @@ namespace SpaceParkLibrary.Models
      
         public IFluentCustomer ParkShip(Starship vehicle, DateTime arrivalTime)
         {
-       
             Console.WriteLine("Här tilldelar vi platsnummer och registrerar det i databasen...");
 
             this.AssignedParkingLot = this._parkingHouse.GetEmptyParkingLot();  //Tilldelar ledig plats

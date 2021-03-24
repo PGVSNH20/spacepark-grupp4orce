@@ -16,27 +16,19 @@ namespace SpacePark
 
             IFluentCustomer customer = new Customer();
 
-            // Objekt med alla skepp
-          
-            customer.SelectStarship().Wait();
-            
-            var vehicle = customer.Starship;
+            Starship vehicle = new Starship(0, null);
+            customer.SelectStarship(vehicle).Wait();
 
             var spacePort = new ParkingHouse("Space Port");
-
+            var parkingOrder = new ParkingOrder();
 
             customer
                 .VisitParkingHouse(spacePort)
-                .SelfRegistration().Wait();
+                .SelfRegistration(parkingOrder, vehicle).Wait();
 
             customer
                 .ParkShip(vehicle, DateTime.Now)
                 .LeavePark(DateTime.Now.AddHours(2));
-
-
         }
-
-
-
     }
 }

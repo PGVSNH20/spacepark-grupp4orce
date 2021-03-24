@@ -18,9 +18,9 @@ namespace SpaceParkLibrary.Interfaces
         //bool CreditWorthiness { get; set; } // Kanske null direkt?
         bool SelfRegistered { get; set; }
 
-        Task<IFluentCustomer> SelectStarship();
+        Task<IFluentCustomer> SelectStarship(Starship starship);
         IFluentCustomer VisitParkingHouse(ParkingHouse parkingHouse);
-        Task<IFluentCustomer> SelfRegistration();
+        Task<IFluentCustomer> SelfRegistration(ParkingOrder parkingOrder, Starship starship);
         IFluentCustomer ParkShip(Starship vechicle, DateTime arrivalTime);
         IFluentCustomer LeavePark(DateTime departureTime);
         IFluentCustomer DisplayCreditWorthiness(); // Tar nog bort den här så får LeaveParksköta det ist

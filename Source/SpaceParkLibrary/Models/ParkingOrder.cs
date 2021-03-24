@@ -15,7 +15,8 @@ namespace SpaceParkLibrary.Models
 
         public ParkingLot AssignedParkingLot { get; set; }
         public decimal ParkingFee  { get; set; }
-        public int  Id { get; set; }
+        public int Id { get; set; }
+
 
     }
 }

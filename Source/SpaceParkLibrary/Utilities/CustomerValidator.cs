@@ -9,11 +9,9 @@ namespace SpaceParkLibrary.Utilities
 {
     public class CustomerValidator
     {
-
         public bool NameIsValid { get; set; }
         public bool ShipIsValid { get; set; }
         public int PageSpaceship { get; set; }
-
 
         public CustomerValidator()
         {
