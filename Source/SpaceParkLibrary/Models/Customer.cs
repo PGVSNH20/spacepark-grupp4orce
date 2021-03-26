@@ -103,8 +103,8 @@ namespace SpaceParkLibrary.Models
             }
 
             // Ifall loopen stegas  ur är vi fullt validerade
-            this.Name = inputName;
-			Console.WriteLine("Submit your information");
+            this.Name = CustomerValidator.RegisteredName;
+			Console.WriteLine("Skriv in din emailadress: ");
             this.Email = Console.ReadLine();
             InvoicePaid = false;
 

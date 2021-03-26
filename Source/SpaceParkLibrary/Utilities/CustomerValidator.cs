@@ -12,6 +12,7 @@ namespace SpaceParkLibrary.Utilities
         public bool NameIsValid { get; set; }
         public bool ShipIsValid { get; set; }
         public int PageSpaceship { get; set; }
+        public static string RegisteredName { get; set; }
 
         public CustomerValidator()
         {
@@ -20,27 +21,30 @@ namespace SpaceParkLibrary.Utilities
 
         public static async Task<bool> NameValidator(string name)
         {
-
             var validator = new CustomerValidator();
-            
-            
             var client = new RestClient("https://swapi.dev/api/");
             var request = new RestRequest("people/", DataFormat.Json).AddParameter("search", name);
             // NOTE: The Swreponse is a custom class which represents the data returned by the API, RestClient have buildin ORM which maps the data from the reponse into a given type of object
             var peopleResponse = await client.GetAsync<PeopleResponse>(request);
-            
-            if(peopleResponse.count > 0)
+
+            if(peopleResponse.count == 1)
             {
-                 return validator.NameIsValid = true;
+                RegisteredName = peopleResponse.results[0].name;
+                return validator.NameIsValid = true;
+            }
+            else if (peopleResponse.count > 1)
+            {
+				foreach (var people in peopleResponse.results)
+				{
+                    //TODO: skriv ut alla namn och välj sedan vilket namn man vill använda och returna detta i RegisteredName
+				}
+                return validator.NameIsValid = true;
             }
             else
             {
                 return validator.NameIsValid = false;
             }
-
-
         }
-
 
         public static async Task<StarshipResponse> GetAllStarships(int changePage)
         {
@@ -52,14 +56,7 @@ namespace SpaceParkLibrary.Utilities
             // NOTE: The Swresponse is a custom class which represents the data returned by the API, RestClient have buildin ORM which maps the data from the reponse into a given type of object
             var StarShipResponse = await client.GetAsync<StarshipResponse>(request);
 
-
             return StarShipResponse;
-
-
         }
-
-
-        
-
     }
 }
