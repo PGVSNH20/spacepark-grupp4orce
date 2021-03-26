@@ -27,17 +27,26 @@ namespace SpaceParkLibrary.Utilities
             // NOTE: The Swreponse is a custom class which represents the data returned by the API, RestClient have buildin ORM which maps the data from the reponse into a given type of object
             var peopleResponse = await client.GetAsync<PeopleResponse>(request);
 
-            if(peopleResponse.count == 1)
+            if (peopleResponse.count == 1)
             {
                 RegisteredName = peopleResponse.results[0].name;
                 return validator.NameIsValid = true;
             }
             else if (peopleResponse.count > 1)
             {
+                Console.WriteLine($"Det finns flera som har ¨{name}¨ i sitt namn!");
+                int i = 0;
 				foreach (var people in peopleResponse.results)
 				{
-                    //TODO: skriv ut alla namn och välj sedan vilket namn man vill använda och returna detta i RegisteredName
+					Console.WriteLine($"[{i++}] {people.name}");
 				}
+				Console.WriteLine("Välj ditt namn: ");
+                string input = Console.ReadLine();
+				int.TryParse(input, out int value);
+
+                //TODO: value out of range
+
+                RegisteredName = peopleResponse.results[value].name;
                 return validator.NameIsValid = true;
             }
             else

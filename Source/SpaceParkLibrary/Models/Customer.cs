@@ -93,6 +93,7 @@ namespace SpaceParkLibrary.Models
 
                 string message;
                 message= (validated) ? "Valid name": "Invalid name";
+				Console.WriteLine($"Valt namn: { CustomerValidator.RegisteredName}");
 
                 Console.WriteLine();
                 Console.WriteLine(message);
