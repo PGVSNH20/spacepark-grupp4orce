@@ -18,5 +18,10 @@ namespace SpaceParkLibrary.Models
             Id = id;
             Occupied = occupied;
         }
+
+        public override string ToString()
+        {
+            return this.Id.ToString();
+        }
     }
 }

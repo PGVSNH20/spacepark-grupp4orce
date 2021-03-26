@@ -1,12 +1,8 @@
 ﻿using SpaceParkLibrary.Interfaces;
 using SpaceParkLibrary.Utilities;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using SpaceParkLibrary.DataAccess;
 
 namespace SpaceParkLibrary.Models
 {
@@ -111,23 +107,28 @@ namespace SpaceParkLibrary.Models
             this.Email = Console.ReadLine();
             InvoicePaid = false;
 
+            // Här registreras troligtvis skeppet på något sätt
+
             parkingOrder.CustomerId = this; // Våran klass kund och dens ifyllda propeties vi nyss satt åker in i parkeringsorderns kundinfo
 
-            //Kolla om kunden finns i databasen
+            // TODO: Koppla upp oss till DB för att kontrolllera om registrerad person redan finns i kundregistret
+            //DataAccess.CheckIfCustomerExistInDB(this.Name);
+
             //Om kunden inte existerar
             //Lägg till kunden till databasen
             
-            // Här registreras troligtvis skeppet på något sätt
 
-            //Person
 
             return this;
         }
 
      
+
         public IFluentCustomer ParkShip( Starship vehicle, DateTime arrivalTime, ParkingOrder parkingOrder)
         {
             Console.WriteLine("Här tilldelar vi platsnummer och registrerar det i databasen...");
+
+            // TODO: koppla upp oss till databasen och hämta en ledigplats
 
             parkingOrder.AssignedParkingLot = this._parkingHouse.GetEmptyParkingLot();  //Tilldelar ledig plats
 
@@ -141,7 +142,6 @@ namespace SpaceParkLibrary.Models
             Console.WriteLine("Här startas fejklockan...");
 
             parkingOrder.ArrivalTime = arrivalTime;
-
 
             return this;
         }
@@ -171,6 +171,9 @@ namespace SpaceParkLibrary.Models
         }
 
 
-
+        public override string ToString()
+        {
+            return this.Id.ToString(); 
+        }
     }
 }

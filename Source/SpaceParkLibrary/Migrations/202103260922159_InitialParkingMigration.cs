@@ -1,9 +1,9 @@
-﻿namespace UI.Migrations
+﻿namespace SpaceParkLibrary.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initial_migration : DbMigration
+    public partial class InitialParkingMigration : DbMigration
     {
         public override void Up()
         {
