@@ -7,15 +7,41 @@ using System.Threading.Tasks;
 
 namespace SpaceParkLibrary.DataAccess
 {
-    public class DataAccess
+    public class DbAccess
     {
         public static void CheckIfCustomerExistInDB(string name)
         {
             throw new NotImplementedException();
         }
-        public static void GetParkingLotsFromDB()
+        public static ParkingLot GetEmptyParkingLotsFromDB()
         {
-            throw new NotImplementedException();
+            
+            // Where(lot => lot.Id <= 10 && lot.Occupied == false)
+            var context = new ParkingContext();
+            var allEmptyParkingLots = context.ParkingLots.Where(lot => lot.Id <= 10 && lot.Occupied == false).ToList();
+            
+            Console.WriteLine("Lediga platser");
+            foreach (var lot in allEmptyParkingLots)
+            {
+                Console.WriteLine(lot);
+            }
+            Console.ReadKey();
+
+            ParkingLot emptySingle = allEmptyParkingLots.First();
+            UpdateVacancyInParkinLot(emptySingle.Id, true);
+
+            return emptySingle;
+        }
+
+        public static void UpdateVacancyInParkinLot(int lotToUpdateId, bool state)
+        {
+
+            var context = new ParkingContext();
+            var parkingLotToUpdate = context.ParkingLots.Where(lot => lot.Id == lotToUpdateId).Single();
+
+            parkingLotToUpdate.Occupied = state;
+            context.SaveChanges();
+
         }
 
         public static void ShowAllParkingsInDatabase()
@@ -25,36 +51,33 @@ namespace SpaceParkLibrary.DataAccess
             // Access dbset
             var context = new ParkingContext();
 
-            // DONE: Make query och få ut lista
-
             var allCustomers = context.Customers.ToList();
             var allShips = context.Starships.ToList();
 
 
             var allParkings = context.ParkingOrders.ToList();
 
-            //(from b in db.Blogs
-            // orderby b.Name
-            // select b)
-
             Console.WriteLine();
 
             Console.WriteLine("Press a key to print orders");
             Console.ReadKey();
-            foreach (var customer in allCustomers)
-            {
-                Console.WriteLine($"{customer.Id}");
-                Console.WriteLine($"{customer.Name}");
-                Console.WriteLine($"{customer.Email}");
-            }
+            //foreach (var customer in allCustomers)
+            //{
+            //    Console.WriteLine($"{customer.Id}");
+            //    Console.WriteLine($"{customer.Name}");
+            //    Console.WriteLine($"{customer.Email}");
+            //}
 
             Console.ReadKey();
 
-            foreach (var parking in allParkings)
+            foreach (ParkingOrder parking in allParkings)
             {
                 //TimeSpan duration = parking.DepartureTime - parking.ArrivalTime;
                 Console.WriteLine(parking);
-                Console.WriteLine(parking.StarshipId.Name);
+       
+                
+
+                //Console.WriteLine(parking.StarshipId.Name);
                 
             }
 

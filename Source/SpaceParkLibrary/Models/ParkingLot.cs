@@ -13,6 +13,10 @@ namespace SpaceParkLibrary.Models
 
         public bool Occupied { get; set; }
 
+        public ParkingLot()
+        {
+
+        }
         public ParkingLot(int id, bool occupied)
         {
             Id = id;
@@ -21,7 +25,7 @@ namespace SpaceParkLibrary.Models
 
         public override string ToString()
         {
-            return this.Id.ToString();
+            return $"Id: {Id} - Occupied: {Occupied}";
         }
     }
 }

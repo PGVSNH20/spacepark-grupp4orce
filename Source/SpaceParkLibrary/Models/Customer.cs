@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using SpaceParkLibrary.DataAccess;
 
+
 namespace SpaceParkLibrary.Models
 {
     public class Customer : IFluentCustomer
@@ -106,7 +107,7 @@ namespace SpaceParkLibrary.Models
 
             // Här registreras troligtvis skeppet på något sätt
 
-            parkingOrder.CustomerId = this; // Våran klass kund och dens ifyllda propeties vi nyss satt åker in i parkeringsorderns kundinfo
+            parkingOrder.Customer = this; // Våran klass kund och dens ifyllda propeties vi nyss satt åker in i parkeringsorderns kundinfo
 
             // TODO: Koppla upp oss till DB för att kontrolllera om registrerad person redan finns i kundregistret
             //DataAccess.CheckIfCustomerExistInDB(this.Name);
@@ -126,19 +127,24 @@ namespace SpaceParkLibrary.Models
             Console.WriteLine("Här tilldelar vi platsnummer och registrerar det i databasen...");
 
             // TODO: koppla upp oss till databasen och hämta en ledigplats
+            Console.WriteLine("Här hämtar vi id på parkeringsplats");
+            parkingOrder.AssignedParkingLotId = DataAccess.DbAccess.GetEmptyParkingLotsFromDB().Id;  //Tilldelar ledig plats this._parkingHouse.GetEmptyParkingLot()
 
-            parkingOrder.AssignedParkingLot = this._parkingHouse.GetEmptyParkingLot();  //Tilldelar ledig plats
-
-            Console.WriteLine($"Välkommen {Name}!");
-            Console.WriteLine($"Din {vehicle.Name} är parkerad på plats {parkingOrder.AssignedParkingLot.Id} och därmed är den klassas som occupied: {parkingOrder.AssignedParkingLot.Occupied}");
-
-            parkingOrder.StarshipId = vehicle;
-
-            Console.WriteLine($"Antal lediga platser för nuvarande är: {_parkingHouse.VacantParkingLots}");
-
-            Console.WriteLine("Här startas fejklockan...");
-
+            Console.WriteLine("Tilldelad plats     " + parkingOrder.AssignedParkingLotId);
+            parkingOrder.Starship = vehicle;
             parkingOrder.ArrivalTime = arrivalTime;
+
+
+            //Console.WriteLine($"Välkommen {Name}!");
+            //Console.WriteLine($"Din {vehicle.Name} är parkerad på plats {parkingOrder.AssignedParkingLotId} och därmed är den klassas som occupied: {parkingOrder.AssignedParkingLotId}");
+
+
+
+            //Console.WriteLine($"Antal lediga platser för nuvarande är: {_parkingHouse.VacantParkingLots}");
+
+            //Console.WriteLine("Här startas fejklockan...");
+
+
 
             return this;
         }
@@ -148,9 +154,11 @@ namespace SpaceParkLibrary.Models
             Console.WriteLine("Här beslutar vi att hämta bilen och fejklockan stoppas...");
             parkingOrder.DepartureTime = departureTime;
 
-            Console.WriteLine("Är vi kreditvärdiga så genereras en faktura baserad på ankomsttid och avgångstid, adress lämnas här ev. ...");
-            
-            Console.WriteLine("En ledig plats registreras som öppen i P-huset...");
+            Console.WriteLine("Id för plats ska uppdateras:      " + parkingOrder.AssignedParkingLotId);
+            DbAccess.UpdateVacancyInParkinLot(parkingOrder.AssignedParkingLotId, false);
+
+            //Console.WriteLine("Är vi kreditvärdiga så genereras en faktura baserad på ankomsttid och avgångstid, adress lämnas här ev. ...");
+            //Console.WriteLine("En ledig plats registreras som öppen i P-huset...");
             // Parking lots uppdateras och  uppvisar totala antalet lediga platser efter gästen försvunnit
 
             return this;
