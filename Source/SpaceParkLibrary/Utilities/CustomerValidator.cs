@@ -28,7 +28,6 @@ namespace SpaceParkLibrary.Utilities
             var request = new RestRequest("people/", DataFormat.Json).AddParameter("search", name);
             // NOTE: The Swreponse is a custom class which represents the data returned by the API, RestClient have buildin ORM which maps the data from the reponse into a given type of object
             var peopleResponse = await client.GetAsync<PeopleResponse>(request);
-
             
             if(peopleResponse.count > 0)
             {
