@@ -51,20 +51,23 @@ namespace SpaceParkLibrary.Models
                     index++;
                     Console.WriteLine($"[{index}]\t{ship.name}");
                 }
-              
-                //Console.WriteLine("Bläddra genom piltangent");
-                //int input = int.Parse(Console.ReadLine());
-                //if (input == 2)
-                //{
-                //    continue;
-                //}
-                //else
+
+                Console.WriteLine("Bläddra genom piltangent");
+                int input = int.Parse(Console.ReadLine());
+                if (input == 2 )
+                {
+                    continue;
+                }
+                else
                 Console.WriteLine("Välj ett skepp genom nummer: ");
 
                 byte choosenStarship = byte.Parse(Console.ReadLine());
 
+                Console.WriteLine("Skriv in ditt registrerings nummer: ");
+                string regNr = Console.ReadLine();
+
                 // Kunden för skriva in sitt egna regnummber
-                this.Starship = new Starship("ABC123", ships[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
+                this.Starship = new Starship(regNr, ships[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
                 break;
             }
 
