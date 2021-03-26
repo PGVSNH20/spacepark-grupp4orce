@@ -25,5 +25,10 @@ namespace SpaceParkLibrary.Models
             RegistrationNumber = reg;
             Name = name;
         }
+
+        public override string ToString()
+        {
+            return this.Id.ToString();
+        }
     }
 }

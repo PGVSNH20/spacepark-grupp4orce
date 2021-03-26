@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UI
+namespace SpaceParkLibrary.DataAccess
 {
-    public class Context : DbContext
+    public class ParkingContext : DbContext
     {
         public DbSet<Customer> Customers { get; set; }
         public DbSet<ParkingOrder> ParkingOrders { get; set; }
@@ -17,7 +17,7 @@ namespace UI
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Customer>().Ignore(b => b.Starship);
+            modelBuilder.Entity<Customer>().Ignore(b => b.Starship); // Kan var fel här?
         }
     }
 }

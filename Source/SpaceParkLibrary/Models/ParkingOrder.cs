@@ -16,5 +16,10 @@ namespace SpaceParkLibrary.Models
 
         public ParkingLot AssignedParkingLot { get; set; } // Ska vi bara skicka in idnummret som en int istället för objektet
         public decimal ParkingFee  { get; set; }
+
+        public override string ToString()
+        {
+            return $"Id: {Id} - KundID: {CustomerId.Id} - SkeppID: {StarshipId.Id} - Ankomst: {ArrivalTime.Hour} - Parkering: {AssignedParkingLot.Id}";
+        }
     }
 }
