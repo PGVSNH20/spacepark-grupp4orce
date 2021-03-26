@@ -44,6 +44,20 @@ namespace SpaceParkLibrary.DataAccess
 
         }
 
+        public static Customer GetExistingCustomer(Customer inputCustomer)
+        {
+            var context = new ParkingContext();
+
+            var singleCustomer = context.Customers.Where(n => n.Name == inputCustomer.Name).Single();
+
+            if (singleCustomer != null)
+            {
+                return singleCustomer;
+            }
+            else
+                return inputCustomer;
+        }
+
         public static void ShowAllParkingsInDatabase()
         {
             Console.WriteLine("Fetch and show all orders");
@@ -51,7 +65,7 @@ namespace SpaceParkLibrary.DataAccess
             // Access dbset
             var context = new ParkingContext();
 
-            var allCustomers = context.Customers.ToList();
+       
             var allShips = context.Starships.ToList();
 
 
@@ -74,10 +88,8 @@ namespace SpaceParkLibrary.DataAccess
             {
                 //TimeSpan duration = parking.DepartureTime - parking.ArrivalTime;
                 Console.WriteLine(parking);
-       
-                
-
-                //Console.WriteLine(parking.StarshipId.Name);
+                Console.WriteLine(parking.Customer.Name);
+                Console.WriteLine(parking.Starship.Name);
                 
             }
 

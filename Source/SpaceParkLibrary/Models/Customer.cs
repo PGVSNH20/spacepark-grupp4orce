@@ -101,14 +101,32 @@ namespace SpaceParkLibrary.Models
             }
 
             // Ifall loopen stegas  ur är vi fullt validerade
+            // Nu vill vi testa om namnet redan registrerat i databasen
+
             this.Name = CustomerValidator.RegisteredName;
-			Console.WriteLine("Skriv in din emailadress: ");
-            this.Email = Console.ReadLine();
-            InvoicePaid = false;
+
+            var customerOut = new Customer();
+
+            customerOut = DbAccess.GetExistingCustomer(this);
+
+            if (customerOut == null)
+            {
+                Console.WriteLine("Skriv in din emailadress: ");
+                this.Email = Console.ReadLine();
+                InvoicePaid = false;
+                parkingOrder.Customer = this;
+
+            }
+            else
+            {
+                Console.WriteLine($"Kunden {customerOut.Name} existerar redan i registret");
+                parkingOrder.Customer = customerOut;
+            }
+               
 
             // Här registreras troligtvis skeppet på något sätt
 
-            parkingOrder.Customer = this; // Våran klass kund och dens ifyllda propeties vi nyss satt åker in i parkeringsorderns kundinfo
+            //parkingOrder.Customer = this; // Våran klass kund och dens ifyllda propeties vi nyss satt åker in i parkeringsorderns kundinfo
 
             // TODO: Koppla upp oss till DB för att kontrolllera om registrerad person redan finns i kundregistret
             //DataAccess.CheckIfCustomerExistInDB(this.Name);
