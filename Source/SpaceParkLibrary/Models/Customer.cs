@@ -3,14 +3,15 @@ using SpaceParkLibrary.Utilities;
 using System;
 using System.Threading.Tasks;
 using SpaceParkLibrary.DataAccess;
-
+using System.Collections.Generic;
 
 namespace SpaceParkLibrary.Models
 {
     public class Customer : IFluentCustomer
     {
         private ParkingHouse _parkingHouse;
-        
+        ParkingOrder parkingOrder = new ParkingOrder(); // Private??
+
 
         // Våran kund som parkerar med skepp, ankomstid och sluttid för parkering,
         // har kreditvärdighet, samt betalat faktura eller ej
@@ -30,7 +31,9 @@ namespace SpaceParkLibrary.Models
         public Starship Starship { get; set; }
         public bool InvoicePaid { get; set; } // Vara eller icke vara?
 
-        ParkingOrder parkingOrder = new ParkingOrder();
+        // Navigation Properties - Här vet vi att en specifik kund kan ha deltagit i flera olika parkeringar
+        //public List<ParkingOrder> ParkingOrders { get; set; }
+
 
         public async Task<IFluentCustomer> SelectStarship()
         {

@@ -12,7 +12,7 @@ using SpaceParkLibrary.Utilities;
 
 namespace SpacePark
 {
-    class Program
+    public class Program
     {
         static async Task Main(string[] args)
         {

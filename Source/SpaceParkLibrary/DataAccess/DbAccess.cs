@@ -48,7 +48,8 @@ namespace SpaceParkLibrary.DataAccess
         {
             var context = new ParkingContext();
 
-            var singleCustomer = context.Customers.Where(n => n.Name == inputCustomer.Name).Single();
+            // Ändrat från single till first
+            var singleCustomer = context.Customers.Where(n => n.Name == inputCustomer.Name).First();
 
             if (singleCustomer != null)
             {
