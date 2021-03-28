@@ -48,7 +48,7 @@ namespace SpaceParkConsoleUITest
             var customerInRegistration = new Customer();
             customerInRegistration.Name = "Luke Skywalker";
 
-            var customerFromDB = DbAccess.GetExistingCustomer(customerInRegistration);
+            var customerFromDB = DbAccess.TryToGetExistingCustomer(customerInRegistration);
 
             Assert.Equal(customerFromDB.Name, customerInRegistration.Name);
         }

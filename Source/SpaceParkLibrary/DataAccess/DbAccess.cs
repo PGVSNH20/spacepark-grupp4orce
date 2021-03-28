@@ -44,15 +44,19 @@ namespace SpaceParkLibrary.DataAccess
 
         }
 
-        public static Customer GetExistingCustomer(Customer inputCustomer)
+        public static Customer TryToGetExistingCustomer(Customer inputCustomer)
         {
             var context = new ParkingContext();
 
             // Ändrat från single till first
-            var singleCustomer = context.Customers.Where(n => n.Name == inputCustomer.Name).First();
+            var singleCustomer = context.Customers.Where(n => n.Name == inputCustomer.Name).FirstOrDefault();
 
-            if (singleCustomer != null)
+            string name = (singleCustomer is null) ? inputCustomer.Name + "\t[Ny kund]" : singleCustomer.Name;
+            Console.WriteLine("Kund heter" + name);
+
+            if (singleCustomer != null) // singleCustomer is not null
             {
+
                 return singleCustomer;
             }
             else
@@ -66,16 +70,37 @@ namespace SpaceParkLibrary.DataAccess
             // Access dbset
             var context = new ParkingContext();
 
-       
-            var allShips = context.Starships.ToList();
 
-
-            var allParkings = context.ParkingOrders.ToList();
-
-            Console.WriteLine();
-
-            Console.WriteLine("Press a key to print orders");
+            //var allShips = context.Starships.ToList();
+            Console.WriteLine("Press a key to print orders\n");
             Console.ReadKey();
+
+            try
+            {
+                var allParkings = context.ParkingOrders.ToList();
+
+
+                foreach (var parking in allParkings)
+                {
+                    //TimeSpan duration = parking.DepartureTime - parking.ArrivalTime;
+                    Console.WriteLine(parking);
+                    //Console.WriteLine(parking.Customer.Name);
+                    //Console.WriteLine(parking.Starship.Name);
+
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw new ArgumentNullException();
+            }
+           
+           
+
+            //var allCustomers = context.Customers.ToList();
+
+        
             //foreach (var customer in allCustomers)
             //{
             //    Console.WriteLine($"{customer.Id}");
@@ -83,16 +108,7 @@ namespace SpaceParkLibrary.DataAccess
             //    Console.WriteLine($"{customer.Email}");
             //}
 
-            Console.ReadKey();
 
-            foreach (ParkingOrder parking in allParkings)
-            {
-                //TimeSpan duration = parking.DepartureTime - parking.ArrivalTime;
-                Console.WriteLine(parking);
-                Console.WriteLine(parking.Customer.Name);
-                Console.WriteLine(parking.Starship.Name);
-                
-            }
 
         }
 

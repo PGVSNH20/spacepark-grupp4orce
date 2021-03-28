@@ -19,6 +19,7 @@ namespace SpaceParkLibrary.Interfaces
         IFluentCustomer VisitParkingHouse(ParkingHouse parkingHouse);
         Task<IFluentCustomer> SelfRegistration(Starship starship, ParkingOrder parkingOrder);
         IFluentCustomer ParkShip(Starship vechicle, DateTime arrivalTime, ParkingOrder parkingOrder);
+        IFluentCustomer DoingStuffOutsideParkingHousePerMinute(int minutes);
         IFluentCustomer LeavePark(DateTime departureTime, ParkingOrder parkingOrder);
         IFluentCustomer DisplayCreditWorthiness(); // Tar nog bort den här så får LeaveParksköta det ist
         IFluentCustomer ReceiveInvoice();

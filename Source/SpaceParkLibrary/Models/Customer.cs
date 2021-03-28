@@ -4,6 +4,8 @@ using System;
 using System.Threading.Tasks;
 using SpaceParkLibrary.DataAccess;
 using System.Collections.Generic;
+using System.Threading;
+using System.Diagnostics;
 
 namespace SpaceParkLibrary.Models
 {
@@ -11,6 +13,8 @@ namespace SpaceParkLibrary.Models
     {
         private ParkingHouse _parkingHouse;
         ParkingOrder parkingOrder = new ParkingOrder(); // Private??
+        
+        public Stopwatch parkingTimer = new Stopwatch();
 
 
         // Våran kund som parkerar med skepp, ankomstid och sluttid för parkering,
@@ -30,6 +34,8 @@ namespace SpaceParkLibrary.Models
         public string Email { get; set; }
         public Starship Starship { get; set; }
         public bool InvoicePaid { get; set; } // Vara eller icke vara?
+
+      
 
         // Navigation Properties - Här vet vi att en specifik kund kan ha deltagit i flera olika parkeringar
         //public List<ParkingOrder> ParkingOrders { get; set; }
@@ -81,6 +87,9 @@ namespace SpaceParkLibrary.Models
         }
         public async Task< IFluentCustomer> SelfRegistration(Starship starship, ParkingOrder parkingOrder)
         {
+            this.InvoicePaid = false; // Default värde
+
+
             Console.WriteLine("Här registrerar vi Namn och skepp och är det godkända stegar vi vidare...");
 
             string inputName = string.Empty;
@@ -110,22 +119,24 @@ namespace SpaceParkLibrary.Models
 
             var customerOut = new Customer();
 
-            customerOut = DbAccess.GetExistingCustomer(this);
+            customerOut = DbAccess.TryToGetExistingCustomer(this);
 
-            if (customerOut == null)
+            if (customerOut.Email == null)
             {
                 Console.WriteLine("Skriv in din emailadress: ");
                 this.Email = Console.ReadLine();
-                InvoicePaid = false;
                 parkingOrder.Customer = this;
 
             }
             else
             {
                 Console.WriteLine($"Kunden {customerOut.Name} existerar redan i registret");
+                this.Email = customerOut.Email;
                 parkingOrder.Customer = customerOut;
+                //return customerOut; returnererar den här klassen eventurellt, skulle va praktiskt
+              
             }
-               
+            Console.WriteLine("Nu har den checkat klart");
 
             // Här registreras troligtvis skeppet på något sätt
 
@@ -166,18 +177,35 @@ namespace SpaceParkLibrary.Models
 
             //Console.WriteLine("Här startas fejklockan...");
 
-
+            this.parkingTimer.Start();
 
             return this;
         }
+
+        public IFluentCustomer DoingStuffOutsideParkingHousePerMinute(int minutes)
+        {
+            double seconds = (minutes / 60) * (60 * 60);
+            Console.WriteLine($"Gästen gör nått annat *tra-tralalla la-la i {seconds} i millsekunder");
+            Thread.Sleep((int)seconds);
+            return this;
+        }
+
+
         public IFluentCustomer LeavePark(DateTime departureTime, ParkingOrder parkingOrder)
         {
-
             Console.WriteLine("Här beslutar vi att hämta bilen och fejklockan stoppas...");
-            parkingOrder.DepartureTime = departureTime;
+
+
+            parkingTimer.Stop();
+            TimeSpan elapsedParkingTime = parkingTimer.Elapsed;
+            Console.WriteLine("ParkingTid i sekunder" + elapsedParkingTime.Seconds);
+
+            DateTime elapsedParkingTimeInHours = parkingOrder.ArrivalTime.AddHours(elapsedParkingTime.Seconds);
+            parkingOrder.DepartureTime = elapsedParkingTimeInHours;
 
             Console.WriteLine("Id för plats ska uppdateras:      " + parkingOrder.AssignedParkingLotId);
             DbAccess.UpdateVacancyInParkinLot(parkingOrder.AssignedParkingLotId, false);
+
 
             //Console.WriteLine("Är vi kreditvärdiga så genereras en faktura baserad på ankomsttid och avgångstid, adress lämnas här ev. ...");
             //Console.WriteLine("En ledig plats registreras som öppen i P-huset...");

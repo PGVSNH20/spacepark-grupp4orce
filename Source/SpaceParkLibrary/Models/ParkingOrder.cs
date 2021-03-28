@@ -28,7 +28,7 @@ namespace SpaceParkLibrary.Models
 
         public override string ToString()
         {
-            return $"Id: {Id} - KundID: {Customer.Id} - SkeppID: {Starship.Id} - Ankomst: {ArrivalTime.Hour} - Parkeringsplats {AssignedParkingLotId}";
+            return $"Id: {Id} - KundID: {Customer} - SkeppID: {Starship} - Ankomst: {ArrivalTime} - Parkeringsplats {AssignedParkingLotId}"; // 
         }
     }
 }
