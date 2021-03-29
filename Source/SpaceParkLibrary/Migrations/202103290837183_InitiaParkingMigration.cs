@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialParkingMigration : DbMigration
+    public partial class InitiaParkingMigration : DbMigration
     {
         public override void Up()
         {
@@ -19,6 +19,26 @@
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
+                "dbo.ParkingOrders",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        CustomerId = c.Int(nullable: false),
+                        StarshipId = c.Int(nullable: false),
+                        ArrivalTime = c.DateTime(nullable: false),
+                        DepartureTime = c.DateTime(nullable: false),
+                        AssignedParkingLotId = c.Int(nullable: false),
+                        ParkingFee = c.Decimal(nullable: false, precision: 18, scale: 2),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.ParkingLots", t => t.AssignedParkingLotId, cascadeDelete: true)
+                .ForeignKey("dbo.Customers", t => t.CustomerId, cascadeDelete: true)
+                .ForeignKey("dbo.Starships", t => t.StarshipId, cascadeDelete: true)
+                .Index(t => t.CustomerId)
+                .Index(t => t.StarshipId)
+                .Index(t => t.AssignedParkingLotId);
+            
+            CreateTable(
                 "dbo.ParkingLots",
                 c => new
                     {
@@ -26,24 +46,6 @@
                         Occupied = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
-            
-            CreateTable(
-                "dbo.ParkingOrders",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        ArrivalTime = c.DateTime(nullable: false),
-                        DepartureTime = c.DateTime(nullable: false),
-                        AssignedParkingLotId = c.Int(nullable: false),
-                        ParkingFee = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        Customer_Id = c.Int(),
-                        Starship_Id = c.Int(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Customers", t => t.Customer_Id)
-                .ForeignKey("dbo.Starships", t => t.Starship_Id)
-                .Index(t => t.Customer_Id)
-                .Index(t => t.Starship_Id);
             
             CreateTable(
                 "dbo.Starships",
@@ -59,13 +61,15 @@
         
         public override void Down()
         {
-            DropForeignKey("dbo.ParkingOrders", "Starship_Id", "dbo.Starships");
-            DropForeignKey("dbo.ParkingOrders", "Customer_Id", "dbo.Customers");
-            DropIndex("dbo.ParkingOrders", new[] { "Starship_Id" });
-            DropIndex("dbo.ParkingOrders", new[] { "Customer_Id" });
+            DropForeignKey("dbo.ParkingOrders", "StarshipId", "dbo.Starships");
+            DropForeignKey("dbo.ParkingOrders", "CustomerId", "dbo.Customers");
+            DropForeignKey("dbo.ParkingOrders", "AssignedParkingLotId", "dbo.ParkingLots");
+            DropIndex("dbo.ParkingOrders", new[] { "AssignedParkingLotId" });
+            DropIndex("dbo.ParkingOrders", new[] { "StarshipId" });
+            DropIndex("dbo.ParkingOrders", new[] { "CustomerId" });
             DropTable("dbo.Starships");
-            DropTable("dbo.ParkingOrders");
             DropTable("dbo.ParkingLots");
+            DropTable("dbo.ParkingOrders");
             DropTable("dbo.Customers");
         }
     }

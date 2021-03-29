@@ -13,7 +13,7 @@ namespace SpaceParkLibrary.Models
     {
         private ParkingHouse _parkingHouse;
         ParkingOrder parkingOrder = new ParkingOrder(); // Private??
-        
+
         public Stopwatch parkingTimer = new Stopwatch();
 
 
@@ -35,7 +35,8 @@ namespace SpaceParkLibrary.Models
         public Starship Starship { get; set; }
         public bool InvoicePaid { get; set; } // Vara eller icke vara?
 
-      
+        // Navigation Properties - 
+        public List<ParkingOrder> ParkingOrders { get; set; }
 
         // Navigation Properties - Här vet vi att en specifik kund kan ha deltagit i flera olika parkeringar
         //public List<ParkingOrder> ParkingOrders { get; set; }
@@ -55,7 +56,8 @@ namespace SpaceParkLibrary.Models
                 foreach (var ship in ships)
                 {
                     index++;
-                    Console.WriteLine($"[{index}]\t{ship.name}");
+                    Console.WriteLine($"[{index}]\t{ship.name}\t{ship.length} m");
+
                 }
               
                 //Console.WriteLine("Bläddra genom piltangent");
@@ -132,6 +134,7 @@ namespace SpaceParkLibrary.Models
             {
                 Console.WriteLine($"Kunden {customerOut.Name} existerar redan i registret");
                 this.Email = customerOut.Email;
+                this.Id = customerOut.Id;
                 parkingOrder.Customer = customerOut;
                 //return customerOut; returnererar den här klassen eventurellt, skulle va praktiskt
               

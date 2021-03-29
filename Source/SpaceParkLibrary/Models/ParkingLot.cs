@@ -9,7 +9,9 @@ namespace SpaceParkLibrary.Models
     public class ParkingLot
     {
         public int Id { get; set; }
-        //public char SectionId { get; set; }
+
+        // Navigation Properties
+        public List<ParkingOrder> ParkingOrders { get; set; }
 
         public bool Occupied { get; set; }
 
