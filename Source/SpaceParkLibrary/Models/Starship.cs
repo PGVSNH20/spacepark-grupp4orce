@@ -13,8 +13,9 @@ namespace SpaceParkLibrary.Models
         public string RegistrationNumber { get; set; } // Veichle identity number, chassie number
         public string Name { get; set; }
 
-        //public int OwnerId { get; set; }
-        //public object DesignatedParkingLot { get; set; }
+        // Navigation Properties - Här vet vi att ett specifikt skepp kan ha deltagit i flera olika parkeringar
+        //public List<ParkingOrder> ParkingOrders { get; set; }
+
 
         public Starship()
         {

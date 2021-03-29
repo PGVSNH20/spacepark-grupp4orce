@@ -13,7 +13,7 @@ namespace SpaceParkLibrary.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202103260922159_InitialParkingMigration"; }
+            get { return "202103261439143_InitialParkingMigration"; }
         }
         
         string IMigrationMetadata.Source

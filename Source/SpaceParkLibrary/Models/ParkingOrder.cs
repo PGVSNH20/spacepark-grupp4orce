@@ -6,20 +6,29 @@ using System.Threading.Tasks;
 
 namespace SpaceParkLibrary.Models
 {
-    public class ParkingOrder
+    public class ParkingOrder 
     {
         public int Id { get; set; }
-        public Customer CustomerId { get; set; } // Ska vi bara skicka in idnummret som en int istället för objektet
-        public Starship StarshipId { get; set; } // Ska vi bara skicka in idnummret som en int istället för objektet
+
+        // Navigation properties
+        //public int CustomerId { get; set; }
+        public Customer Customer { get; set; } 
+
+        //public int StarshipID { get; set; }
+        public Starship Starship { get; set; } 
+
         public DateTime ArrivalTime { get; set; }
         public DateTime DepartureTime { get; set; }
 
-        public ParkingLot AssignedParkingLot { get; set; } // Ska vi bara skicka in idnummret som en int istället för objektet
+        // Navigation properties
+        public int AssignedParkingLotId { get; set; }
+        //public ParkingLot AssignedParkingLot{ get; set; }
+
         public decimal ParkingFee  { get; set; }
 
         public override string ToString()
         {
-            return $"Id: {Id} - KundID: {CustomerId.Id} - SkeppID: {StarshipId.Id} - Ankomst: {ArrivalTime.Hour} - Parkering: {AssignedParkingLot.Id}";
+            return $"Id: {Id} - KundID: {Customer} - SkeppID: {Starship} - Ankomst: {ArrivalTime} - Parkeringsplats {AssignedParkingLotId}"; // 
         }
     }
 }
