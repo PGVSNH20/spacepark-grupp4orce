@@ -25,7 +25,6 @@ namespace SpaceParkLibrary.DataAccess
             var context = new ParkingContext();
 
             var newCustomer = context.Customers.Where(n => n.Name == customerName).FirstOrDefault();
-
             return newCustomer.Id;
 
         }
@@ -47,21 +46,22 @@ namespace SpaceParkLibrary.DataAccess
         }
         public static ParkingLot GetEmptyParkingLotsFromDB()
         {
-            
-            // Where(lot => lot.Id <= 10 && lot.Occupied == false)
+
             var context = new ParkingContext();
-            var allEmptyParkingLots = context.ParkingLots.Where(lot => lot.Id <= 10 && lot.Occupied == false).ToList();
-            
-            Console.WriteLine("Lediga platser");
+            var allEmptyParkingLots = context.ParkingLots.Where(lot => lot.Occupied == false).ToList();
+
+            Console.WriteLine("\nLediga platser");
+            Console.WriteLine("----------------------------------------------------------------------------------------");
             foreach (var lot in allEmptyParkingLots)
             {
                 Console.WriteLine(lot);
             }
-            Console.ReadKey();
-
+            Console.WriteLine("----------------------------------------------------------------------------------------");
+            Console.WriteLine();
             ParkingLot emptySingle = allEmptyParkingLots.First();
             UpdateVacancyInParkinLot(emptySingle.Id, true);
 
+            context.SaveChanges();
             return emptySingle;
         }
 
@@ -84,7 +84,6 @@ namespace SpaceParkLibrary.DataAccess
             var singleCustomer = context.Customers.Where(n => n.Name == inputCustomer.Name).FirstOrDefault();
 
             string name = (singleCustomer is null) ? inputCustomer.Name + "\t[Ny kund]" : singleCustomer.Name;
-            Console.WriteLine("Kund heter" + name);
 
             if (singleCustomer != null) // singleCustomer is not null
             {
@@ -94,62 +93,106 @@ namespace SpaceParkLibrary.DataAccess
             else
                 return inputCustomer;
         }
-  
+
 
         public static void ShowAllParkingsInDatabase()
         {
             Console.WriteLine("Fetch and show all orders");
 
             // Access dbset
+
             var context = new ParkingContext();
 
-
-            //var allShips = context.Starships.ToList();
             Console.WriteLine("Press a key to print orders\n");
             Console.ReadKey();
 
             try
             {
-                var allParkings = context.ParkingOrders.ToList();
+                var allCustomers = context.Customers;//.ToList();
+                var allParkings = context.ParkingOrders;// .ToList();
+                var allShips = context.Starships;
+
+                var dataDb = (from cust in allCustomers
+                              join park in allParkings
+                              on cust.Id equals park.CustomerId
+                              join ship in allShips
+                              on park.StarshipId equals ship.Id
+                              select new
+                              {
+                                  Id = cust.Id,
+                                  Name = cust.Name,
+                                  Ship = ship.Name,
+                                  ShipId = park.StarshipId,
+                                  Email = cust.Email,
+                                  ParkingOrderId = park.Id,
+                                  ParkIngLot = park.AssignedParkingLotId,
+                                  Arrival = park.ArrivalTime,
+                                  Departure = park.DepartureTime,
+                                  Fee = park.ParkingFee
+                              }).ToList();
+
 
 
                 foreach (var parking in allParkings)
                 {
-                    //TimeSpan duration = parking.DepartureTime - parking.ArrivalTime;
-                    Console.WriteLine(parking);
-                    //Console.WriteLine(parking.Customer.Name);
-                    //Console.WriteLine(parking.Starship.Name);
 
+                    Console.WriteLine(parking);
 
                 }
+                Console.WriteLine();
+                foreach (var cust in dataDb)
+                {
+                    Console.WriteLine($"{cust.Id} - {cust.Name} - {cust.ShipId} - {cust.Ship} - {cust.Email} - {cust.ParkingOrderId} - {cust.Arrival} - {cust.Departure} - {cust.Fee}");
+
+                }
+
+
             }
             catch (Exception)
             {
 
                 throw new ArgumentNullException();
             }
-           
-           
 
-            //var allCustomers = context.Customers.ToList();
+        }
+        public static bool ValidateCustomerCreditWorthiness(int customerID)
+        {
+            var context = new ParkingContext();
 
-        
-            //foreach (var customer in allCustomers)
-            //{
-            //    Console.WriteLine($"{customer.Id}");
-            //    Console.WriteLine($"{customer.Name}");
-            //    Console.WriteLine($"{customer.Email}");
-            //}
+            var customer = context.Customers.Where(x => x.Id == customerID).FirstOrDefault();
 
+            bool invoiceNotPaid = customer.InvoicePaid == false;
+            var num = context.ParkingOrders.Where(x => x.CustomerId == customerID).Count();
 
+            if (invoiceNotPaid && num > 1)
+            {
+                Console.WriteLine("Din senaste faktura är inte betald. Gravity Lock initieras.\n");
+                return false;
+            }
+            else
+            {
+                Console.WriteLine("Tack och välkommen åter!\n");
+                return true;
 
+            }
+
+        }
+
+        public async Task SendInvoiceThroughMail(int customerID)
+        {
+            var context = new ParkingContext();
+
+            var customer = context.Customers.Where(x => x.Id == customerID).FirstOrDefault();
+            var email = customer.Email;
+
+            Console.WriteLine("\nRäkning skickad till " + email);
         }
 
         public static void AddSingleOrderToDatabase(ParkingOrder order)
         {
 
             Console.WriteLine("Add order to database");
-            var context = new ParkingContext();     
+            var context = new ParkingContext();
             context.ParkingOrders.Add(order);
 
             Console.WriteLine("Press a key to save to database");
@@ -157,6 +200,17 @@ namespace SpaceParkLibrary.DataAccess
             // DONE: Save change in database
             context.SaveChanges();
             Console.WriteLine("Order saved to database");
+        }
+
+        public static int GetAmountOfEmptyParkingLots()
+        {
+            var context = new ParkingContext();
+
+            var availableParkingLots = context.ParkingLots.Where(x => x.Occupied == false).Count();
+            context.SaveChanges();
+            return availableParkingLots;
+
+
         }
     }
 }

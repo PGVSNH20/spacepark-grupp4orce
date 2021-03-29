@@ -15,15 +15,11 @@ namespace SpaceParkLibrary.Interfaces
         public string Email { get; set; }
         public ParkingOrder ParkingRegistration { get; set; }
 
-        Task<IFluentCustomer> SelectStarship();
-        IFluentCustomer VisitParkingHouse(ParkingHouse parkingHouse);
+        Task<Starship> RegistrateStarship();
         Task<IFluentCustomer> SelfRegistration();
         IFluentCustomer ParkShip(DateTime arrivalTime);
-        IFluentCustomer DoingStuffOutsideParkingHousePerMinute(int minutes);
-        IFluentCustomer LeavePark(DateTime departureTime);
-        IFluentCustomer DisplayCreditWorthiness(); // Tar nog bort den här så får LeaveParksköta det ist
-        IFluentCustomer ReceiveInvoice();
-
+        Task<Double> ParkingTimeInMinutesSimulator(int minutes);
+        Task<IFluentCustomer> LeavePark(DateTime departureTime);
 
     }
 }

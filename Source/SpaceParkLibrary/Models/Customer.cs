@@ -6,6 +6,7 @@ using SpaceParkLibrary.DataAccess;
 using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace SpaceParkLibrary.Models
 {
@@ -43,22 +44,14 @@ namespace SpaceParkLibrary.Models
         //public List<ParkingOrder> ParkingOrders { get; set; }
 
 
-        
-        public IFluentCustomer VisitParkingHouse(ParkingHouse parkingHouse)
-        {
-            _parkingHouse = parkingHouse;
-            Console.WriteLine("Gästen besöker: " + _parkingHouse.Name); //Måste få in namnet på P-huset här
-
-            Console.WriteLine($"Lediga platser: {_parkingHouse.VacantParkingLots} av totala maxkapaciteten {_parkingHouse.TotalParkingsLots}");
-            
-            return this;
-        }
         public async Task<IFluentCustomer> SelfRegistration()
         {
             this.InvoicePaid = false; // Default värde
 
-            Console.WriteLine("Välkommen til parkeringshuset!");
-            Console.WriteLine("Var vänlig och registrera ditt namn och rymdskeppet du önskar parkera");
+            Console.WriteLine("Välkommen till Rymdparkeringshuset!");
+            Console.WriteLine("=========================================================================================\n");
+            Console.WriteLine($"Just nu har vi {ParkingHouse.AmountOfEmptylots} av totalt {ParkingHouse.TotalParkingsLots}\n");
+            Console.WriteLine("Var vänlig och registrera ditt namn och rymdskeppet du önskar parkera.\n");
 
             string inputName = string.Empty;
             bool validated = false;
@@ -68,19 +61,16 @@ namespace SpaceParkLibrary.Models
                 Console.WriteLine("Skriv in ditt namn: ");
                 inputName = Console.ReadLine();
 
-                validated  = await CustomerValidator.NameValidator(inputName);
+                validated = await CustomerValidator.NameValidator(inputName);
 
                 string message;
-                message= (validated) ? "Valid name": "Invalid name";
-				Console.WriteLine($"Valt namn: { CustomerValidator.RegisteredName}");
+                message = (validated) ? "Valid name" : "Invalid name";
+                Console.WriteLine($"Valt namn: { CustomerValidator.RegisteredName}");
 
                 Console.WriteLine();
                 Console.WriteLine(message);
                 Console.WriteLine();
             }
-
-            // Ifall loopen stegas  ur är vi fullt validerade
-            // Nu vill vi testa om namnet redan registrerat i databasen
 
             this.Name = CustomerValidator.RegisteredName;
 
@@ -91,48 +81,38 @@ namespace SpaceParkLibrary.Models
 
             if (customerOut.Email == null)
             {
-                Console.WriteLine("Skriv in din emailadress: ");
+                Console.Write("Skriv in din emailadress: ");
                 this.Email = Console.ReadLine();
                 DbAccess.RegistrateCustomerIntoDB(customerOut);
             }
             else
             {
                 Console.WriteLine($"Kunden {customerOut.Name} existerar redan i registret");
- 
+
             }
-            Console.WriteLine("Nu har den checkat klart");
-            
-            //
-           
+
 
             var customerID = DbAccess.GetCustomerId(customerOut.Name);
-            Console.WriteLine("Kund Id" + customerID);
+
+            Console.WriteLine($"\nNamnvalidering godkänd. Du har KundId: {customerID}");
             this.ParkingRegistration.CustomerId = customerID;
 
             this.Starship = await RegistrateStarship();
-            Console.WriteLine("skepp heter i reg" + this.Starship.Name);
+
 
             DbAccess.RegistrateStarshipIntoDB(Starship);
             this.ParkingRegistration.StarshipId = DbAccess.GetStarshipId(Starship.Name);
 
-            Console.WriteLine($"Registreringen är slutförd för {Name} och {Starship}.");
-            // Här registreras troligtvis skeppet på något sätt
-
-            //parkingOrder.Customer = this; // Våran klass kund och dens ifyllda propeties vi nyss satt åker in i parkeringsorderns kundinfo
-
-            // TODO: Koppla upp oss till DB för att kontrolllera om registrerad person redan finns i kundregistret
-            //DataAccess.CheckIfCustomerExistInDB(this.Name);
-
-            //Om kunden inte existerar
-            //Lägg till kunden till databasen
-
-
-
+            Console.WriteLine($"Registreringen är nu slutförd för {Name} och skeppet som tilldelats ID-nummer: {Starship}.\n");
+            Console.WriteLine();
             return this;
         }
         public async Task<Starship> RegistrateStarship()
         {
-            byte index = 0;
+            int index = 0;
+            int choosenStarship = 0;
+            double shipLenght;
+            string regNr;
 
             for (int i = 0; i < 4; i++)
             {
@@ -140,58 +120,20 @@ namespace SpaceParkLibrary.Models
                 var objectOfStarships = await CustomerValidator.GetAllStarships(i + 1);
                 var ships = objectOfStarships.results;
 
-                Console.WriteLine("Var god och registrera ditt rymdskepp");
-                Console.WriteLine("------------------------------");
+                Console.WriteLine("\nVar god och registrera ditt rymdskepp.");
+                Console.WriteLine("----------------------------------------------------------------------------------------");
                 foreach (var ship in ships)
                 {
+                    const string format = "[{0,2}]{1,50}{2,10}m";
+
                     index++;
-                    Console.WriteLine($"[{index}]\t{ship.name}\t\t{ship.length} m");
+                    //Console.WriteLine($"[{index}]".PadRight(10) + $"{ship.name,30}" + $"{ship.length,10} m");
+                    Console.WriteLine(string.Format(format, index, ship.name, ship.length));
 
                 }
-
-                Console.WriteLine("Bläddra genom piltangent ner eller annan valfri tangent för att välja skepp");
-
-                ConsoleKeyInfo keyInfo = Console.ReadKey();
-
-                //if (keyInfo.Key == ConsoleKey.DownArrow)
-                //{
-                //    index = 0;
-                //    continue;
-                //}
-                //else
-                    Console.WriteLine("Välj ett skepp genom nummer: ");
-
-                byte choosenStarship = byte.Parse(Console.ReadLine());
-                
-                Console.WriteLine("Skriv in ditt registrerings nummer: ");
-                string regNr = Console.ReadLine();
-                var newStarship = new Starship(regNr, ships[choosenStarship - 1].name);// Slu7mpa fram ett eget ägarnummer
-                return newStarship;
-            }
-            return null;
-         
-        }
-        public async Task<IFluentCustomer> SelectStarship()
-        {
-            byte index = 0;
-
-            for (int i = 0; i < 4; i++)
-            {
-
-                var objectOfStarships = await CustomerValidator.GetAllStarships(i + 1);
-                var ships = objectOfStarships.results;
-
-                Console.WriteLine("Var god och registrera ditt rymdskepp");
-                Console.WriteLine("------------------------------");
-                foreach (var ship in ships)
-                {
-                    index++;
-                    Console.WriteLine($"[{index}]\t{ship.name}\t\t{ship.length} m");
-
-                }
-
-                Console.WriteLine("Bläddra genom piltangent ner eller annan valfri tangent för att välja skepp");
-
+                Console.WriteLine("----------------------------------------------------------------------------------------\n");
+                Console.WriteLine("Bläddra genom nedåt- eller uppåtpilen för att navigera bland förvalda skepp.\n");
+                Console.WriteLine("Tryck på enter för att välja skepp.");
                 ConsoleKeyInfo keyInfo = Console.ReadKey();
 
                 if (keyInfo.Key == ConsoleKey.DownArrow)
@@ -199,33 +141,57 @@ namespace SpaceParkLibrary.Models
                     index = 0;
                     continue;
                 }
-                else
-                    Console.WriteLine("Välj ett skepp genom nummer: ");
+                else if (keyInfo.Key == ConsoleKey.UpArrow && i != 0)
+                {
+                    index = 0;
+                    i--;
+                    continue;
+                }
+                else if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    choosenStarship = int.Parse(Console.ReadLine());
+                }
+                else { index = 0; i = 0; continue; } // Default för felnavigering
 
-                byte choosenStarship = byte.Parse(Console.ReadLine());
+                string length = ships[choosenStarship - 1].length;
+                if (length.Contains(','))
+                {
+                    length = length.Remove(length.IndexOf(','), 1);
+                }
 
-                Console.WriteLine("Skriv in ditt registrerings nummer: ");
-                string regNr = Console.ReadLine();
+                shipLenght = double.Parse(length, CultureInfo.InvariantCulture);
 
-            
-                this.Starship = new Starship(regNr, ships[choosenStarship - 1].name);
-              
-                this.ParkingRegistration.StarshipId = DbAccess.GetStarshipId(Starship.Name);// Slu7mpa fram ett eget ägarnummer
-                break;
+
+                if (GateKeeper.IsStarshipToLongForParkinglot(ships[choosenStarship - 1].name, shipLenght) == false)
+                {
+                    index = 0;
+                    i--;
+                    continue;
+                }
+
+
+                do
+                {
+                    Console.WriteLine("Skriv in ditt registreringsnummer: ");
+                    regNr = Console.ReadLine();
+
+                } while (GateKeeper.IsRegistrationNumberValid(regNr) == false);
+
+
+                var newStarship = new Starship(regNr, ships[choosenStarship - 1].name);// Slu7mpa fram ett eget ägarnummer
+                return newStarship;
             }
+            return null;
 
-            return this;
         }
-
 
         public IFluentCustomer ParkShip(DateTime arrivalTime)
         {
-         
+            Console.WriteLine($"{ParkingHouse.AmountOfEmptylots} antal lediga platser nu tillgängliga.\n");
             this.ParkingRegistration.AssignedParkingLotId = DataAccess.DbAccess.GetEmptyParkingLotsFromDB().Id;  //Tilldelar ledig plats this._parkingHouse.GetEmptyParkingLot()
 
-            Console.WriteLine($"Tilldelad plats: {ParkingRegistration.AssignedParkingLotId}");
-         
-
+            Console.WriteLine($"Tilldelad parkeringsplats: {ParkingRegistration.AssignedParkingLotId}");
+            Console.WriteLine($"{ParkingHouse.AmountOfEmptylots} antal lediga platser nu tillgängliga\n");
             this.ParkingRegistration.ArrivalTime = arrivalTime;
             Console.WriteLine("Parkeringens starttid påbörjas:" + ParkingRegistration.ArrivalTime);
             this.parkingTimer.Start();
@@ -233,52 +199,54 @@ namespace SpaceParkLibrary.Models
             return this;
         }
 
-        public IFluentCustomer DoingStuffOutsideParkingHousePerMinute(int minutes)
+        public async Task<double> ParkingTimeInMinutesSimulator(int minutes)
         {
-            double seconds = (minutes / 60) * (60 * 60);
-            Console.WriteLine($"Gästen gör nått annat *tra-tralalla la-la i {seconds} i millsekunder");
-            Thread.Sleep((int)seconds);
-            return this;
+            double simulatedTimeInMilliSec = (minutes * 100);
+            Console.WriteLine($"Gästen gör nått annat. Var god vänta *tra-la-la lalalalalalaaaaaa*");
+            Thread.Sleep((int)simulatedTimeInMilliSec);
+
+            return simulatedTimeInMilliSec / 100;
         }
 
 
-        public IFluentCustomer LeavePark(DateTime departureTime)
+        public async Task<IFluentCustomer> LeavePark(DateTime departureTime)
         {
-            
-
             parkingTimer.Stop();
+            this.ParkingRegistration.DepartureTime = departureTime;
+            TimeSpan totalMinutesElapsed = departureTime - this.ParkingRegistration.ArrivalTime;
+
             TimeSpan elapsedParkingTime = parkingTimer.Elapsed;
-            Console.WriteLine("ParkingTid i sekunder" + elapsedParkingTime.Seconds);
+            Console.WriteLine("Parkeringstid i verkliga sekunder: " + elapsedParkingTime.Seconds);
 
-            DateTime elapsedParkingTimeInHours = ParkingRegistration.ArrivalTime.AddHours(elapsedParkingTime.Seconds);
-            this.ParkingRegistration.DepartureTime = elapsedParkingTimeInHours;
+            decimal invoiceSum = GateKeeper.CalculateParkingFee(totalMinutesElapsed.TotalHours);
+            this.ParkingRegistration.ParkingFee = invoiceSum;
 
-            Console.WriteLine("Id för plats ska uppdateras:      " + ParkingRegistration.AssignedParkingLotId);
+            Console.WriteLine($"Totalparkeringtid: {totalMinutesElapsed.Hours}:{totalMinutesElapsed.Minutes} h");
+            Console.WriteLine();
+
+            if (DbAccess.ValidateCustomerCreditWorthiness(ParkingRegistration.CustomerId) == false)
+                Console.WriteLine("Du är tvungen att betala kontant för att kunna lämna parkeringen annars beslagtags ditt fordon.");
+
+
+            var access = new DbAccess();
+            await access.SendInvoiceThroughMail(ParkingRegistration.CustomerId);
+
+
+            Console.WriteLine($"\nPlats {ParkingRegistration.AssignedParkingLotId} är nu ledig igen! ");
             DbAccess.UpdateVacancyInParkinLot(ParkingRegistration.AssignedParkingLotId, false);
 
+            Console.WriteLine($"Just nu är {ParkingHouse.AmountOfEmptylots} platser lediga av totalt {ParkingHouse.TotalParkingsLots}.\n");
 
-            //Console.WriteLine("Är vi kreditvärdiga så genereras en faktura baserad på ankomsttid och avgångstid, adress lämnas här ev. ...");
-            //Console.WriteLine("En ledig plats registreras som öppen i P-huset...");
-            // Parking lots uppdateras och  uppvisar totala antalet lediga platser efter gästen försvunnit
+            Console.WriteLine();
+
+            DbAccess.AddSingleOrderToDatabase(this.ParkingRegistration);
 
             return this;
         }
-        public IFluentCustomer DisplayCreditWorthiness()
-        {
-            Console.WriteLine("Kreditvärdighet måste alltid kollas innan gästen lämnar...");
-            return this;
-        }
-
-        public IFluentCustomer ReceiveInvoice()
-        {
-            Console.WriteLine("InvoiceTracker skickar faktura till kunden baserad på planet te x");
-            return this;
-        }
-
 
         public override string ToString()
         {
-            return this.Id.ToString(); 
+            return this.Id.ToString();
         }
     }
 }
