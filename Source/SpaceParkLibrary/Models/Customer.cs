@@ -48,6 +48,7 @@ namespace SpaceParkLibrary.Models
 
             for (int i = 0; i < 4; i++)
             {
+                
                 var objectOfStarships = await CustomerValidator.GetAllStarships(i + 1);
                 var ships = objectOfStarships.results;
 
@@ -59,20 +60,26 @@ namespace SpaceParkLibrary.Models
                     Console.WriteLine($"[{index}]\t{ship.name}\t{ship.length} m");
 
                 }
-              
-                //Console.WriteLine("Bläddra genom piltangent");
-                //int input = int.Parse(Console.ReadLine());
-                //if (input == 2)
-                //{
-                //    continue;
-                //}
-                //else
+
+                Console.WriteLine("Bläddra genom piltangent ner eller annan valfri tangent för att välja skepp");
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
+                
+                if (keyInfo.Key == ConsoleKey.DownArrow)    
+                {
+                    index = 0;
+                    continue;
+                }
+                else
                 Console.WriteLine("Välj ett skepp genom nummer: ");
 
                 byte choosenStarship = byte.Parse(Console.ReadLine());
 
+                Console.WriteLine("Skriv in ditt registrerings nummer: ");
+                string regNr = Console.ReadLine();
+
                 // Kunden för skriva in sitt egna regnummber
-                this.Starship = new Starship("ABC123", ships[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
+                this.Starship = new Starship(regNr, ships[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
                 break;
             }
 
