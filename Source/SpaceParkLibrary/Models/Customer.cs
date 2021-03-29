@@ -47,6 +47,7 @@ namespace SpaceParkLibrary.Models
 
             for (int i = 0; i < 4; i++)
             {
+                
                 var objectOfStarships = await CustomerValidator.GetAllStarships(i + 1);
                 var ships = objectOfStarships.results;
 
@@ -58,10 +59,13 @@ namespace SpaceParkLibrary.Models
                     Console.WriteLine($"[{index}]\t{ship.name}");
                 }
 
-                Console.WriteLine("Bläddra genom piltangent");
-                int input = int.Parse(Console.ReadLine());
-                if (input == 2 )
+                Console.WriteLine("Bläddra genom piltangent ner eller annan valfri tangent för att välja skepp");
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
+                
+                if (keyInfo.Key == ConsoleKey.DownArrow)    
                 {
+                    index = 0;
                     continue;
                 }
                 else
