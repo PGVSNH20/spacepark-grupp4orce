@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace SpaceParkLibrary.Models
 {
@@ -23,10 +24,23 @@ namespace SpaceParkLibrary.Models
 				return true;
 			}
 		}
+
+		public bool RegistrationNumberChecker(string regNumber)
+		{
+			string pattern = "(^B[A-Z]{3}[0-9]{3}$)";
+			var matching = Regex.Match(pattern, regNumber);
+			if (matching.Success)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
         // GateKeepern är våran dörrvakt som släpper in godkända gäster,
         // och håller räkning på dem samt släpper ut dem ifall kreditvärdighet uppnås
         // för att sedan skicka till ekonomiavdelningen för fakturering
-
-
     }
 }
