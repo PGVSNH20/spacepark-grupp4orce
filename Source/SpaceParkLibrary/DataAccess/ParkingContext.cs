@@ -19,7 +19,7 @@ namespace SpaceParkLibrary.DataAccess
         {
             modelBuilder.Entity<Customer>().Ignore(b => b.Starship); // Kan var fel här?
             //modelBuilder.Entity<ParkingOrder>().Ignore(b => b.AssignedParkingLot);
-
+            modelBuilder.Entity<Customer>().Ignore(x => x.ParkingRegistration);
 
         }
 

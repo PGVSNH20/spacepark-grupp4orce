@@ -15,30 +15,26 @@ namespace SpacePark
 {
     public class Program
     {
+       
         static async Task Main(string[] args)
         {
-
+            var  spacePort = new ParkingHouse("Space Port");
+            
+            
             IFluentCustomer customer1 = new Customer();
 
-            customer1.SelectStarship().Wait();
-            Starship vehicle = customer1.Starship;
-
-            var spacePort = new ParkingHouse("Space Port");
-            var parkingOrder = new ParkingOrder();
-
-
+   
+            customer1
+                .SelfRegistration().Wait();
 
             customer1
-                .SelfRegistration(vehicle, parkingOrder).Wait();
-
-            customer1
-                .ParkShip(vehicle, DateTime.Now, parkingOrder)
+                .ParkShip (DateTime.Now)
                 .DoingStuffOutsideParkingHousePerMinute(120);
 
-            customer1.LeavePark(DateTime.Now.AddHours(2), parkingOrder); // Total tid för parkering och slutkostnad uppdateras till databasen här
+            customer1.LeavePark(DateTime.Now.AddHours(2)); // Total tid för parkering och slutkostnad uppdateras till databasen här
 
 
-            DbAccess.AddSingleOrderToDatabase(parkingOrder);
+            DbAccess.AddSingleOrderToDatabase(customer1.ParkingRegistration);
             DbAccess.ShowAllParkingsInDatabase();
             //ska slutordern vara här ?
         }

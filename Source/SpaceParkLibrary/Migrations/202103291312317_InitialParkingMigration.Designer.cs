@@ -7,13 +7,13 @@ namespace SpaceParkLibrary.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class InitiaParkingMigration : IMigrationMetadata
+    public sealed partial class InitialParkingMigration : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitiaParkingMigration));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialParkingMigration));
         
         string IMigrationMetadata.Id
         {
-            get { return "202103290837183_InitiaParkingMigration"; }
+            get { return "202103291312317_InitialParkingMigration"; }
         }
         
         string IMigrationMetadata.Source

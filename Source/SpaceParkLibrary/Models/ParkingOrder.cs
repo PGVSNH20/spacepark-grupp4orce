@@ -12,17 +12,17 @@ namespace SpaceParkLibrary.Models
 
         // Navigation properties
         public int CustomerId { get; set; }
-        public Customer Customer { get; set; } 
+        //public Customer Customer { get; set; } 
 
         public int StarshipId { get; set; }
-        public Starship Starship { get; set; } 
+        //public Starship Starship { get; set; } 
 
         public DateTime ArrivalTime { get; set; }
         public DateTime DepartureTime { get; set; }
 
         // Navigation properties
         public int AssignedParkingLotId { get; set; }
-        public ParkingLot AssignedParkingLot{ get; set; }
+        //public ParkingLot AssignedParkingLot{ get; set; }
 
         public decimal ParkingFee  { get; set; }
 

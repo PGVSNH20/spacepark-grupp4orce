@@ -14,7 +14,7 @@ namespace SpaceParkLibrary.Models
         public string Name { get; set; }
 
         // Navigation Properties - Här vet vi att ett specifikt skepp kan ha deltagit i flera olika parkeringar
-        public List<ParkingOrder> ParkingOrders { get; set; }
+        //public List<ParkingOrder> ParkingOrders { get; set; }
 
 
         public Starship()

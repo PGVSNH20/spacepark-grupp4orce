@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitiaParkingMigration : DbMigration
+    public partial class InitialParkingMigration : DbMigration
     {
         public override void Up()
         {
@@ -15,8 +15,11 @@
                         Name = c.String(),
                         Email = c.String(),
                         InvoicePaid = c.Boolean(nullable: false),
+                        ParkingRegistration_Id = c.Int(),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.ParkingOrders", t => t.ParkingRegistration_Id)
+                .Index(t => t.ParkingRegistration_Id);
             
             CreateTable(
                 "dbo.ParkingOrders",
@@ -30,13 +33,7 @@
                         AssignedParkingLotId = c.Int(nullable: false),
                         ParkingFee = c.Decimal(nullable: false, precision: 18, scale: 2),
                     })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.ParkingLots", t => t.AssignedParkingLotId, cascadeDelete: true)
-                .ForeignKey("dbo.Customers", t => t.CustomerId, cascadeDelete: true)
-                .ForeignKey("dbo.Starships", t => t.StarshipId, cascadeDelete: true)
-                .Index(t => t.CustomerId)
-                .Index(t => t.StarshipId)
-                .Index(t => t.AssignedParkingLotId);
+                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.ParkingLots",
@@ -61,12 +58,8 @@
         
         public override void Down()
         {
-            DropForeignKey("dbo.ParkingOrders", "StarshipId", "dbo.Starships");
-            DropForeignKey("dbo.ParkingOrders", "CustomerId", "dbo.Customers");
-            DropForeignKey("dbo.ParkingOrders", "AssignedParkingLotId", "dbo.ParkingLots");
-            DropIndex("dbo.ParkingOrders", new[] { "AssignedParkingLotId" });
-            DropIndex("dbo.ParkingOrders", new[] { "StarshipId" });
-            DropIndex("dbo.ParkingOrders", new[] { "CustomerId" });
+            DropForeignKey("dbo.Customers", "ParkingRegistration_Id", "dbo.ParkingOrders");
+            DropIndex("dbo.Customers", new[] { "ParkingRegistration_Id" });
             DropTable("dbo.Starships");
             DropTable("dbo.ParkingLots");
             DropTable("dbo.ParkingOrders");

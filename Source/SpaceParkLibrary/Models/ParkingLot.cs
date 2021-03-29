@@ -11,7 +11,7 @@ namespace SpaceParkLibrary.Models
         public int Id { get; set; }
 
         // Navigation Properties
-        public List<ParkingOrder> ParkingOrders { get; set; }
+        //public List<ParkingOrder> ParkingOrders { get; set; }
 
         public bool Occupied { get; set; }
 

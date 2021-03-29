@@ -12,7 +12,7 @@ namespace SpaceParkLibrary.Models
     public class Customer : IFluentCustomer
     {
         private ParkingHouse _parkingHouse;
-        ParkingOrder parkingOrder = new ParkingOrder(); // Private??
+
 
         public Stopwatch parkingTimer = new Stopwatch();
 
@@ -32,59 +32,18 @@ namespace SpaceParkLibrary.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public Starship Starship { get; set; }
+        public ParkingOrder ParkingRegistration { get; set; } = new ParkingOrder();
+        public Starship Starship { get; set; } = new Starship();
         public bool InvoicePaid { get; set; } // Vara eller icke vara?
 
         // Navigation Properties - 
-        public List<ParkingOrder> ParkingOrders { get; set; }
+        //public List<ParkingOrder> ParkingOrders { get; set; }
 
         // Navigation Properties - Här vet vi att en specifik kund kan ha deltagit i flera olika parkeringar
         //public List<ParkingOrder> ParkingOrders { get; set; }
 
 
-        public async Task<IFluentCustomer> SelectStarship()
-        {
-            byte index = 0;
-
-            for (int i = 0; i < 4; i++)
-            {
-                
-                var objectOfStarships = await CustomerValidator.GetAllStarships(i + 1);
-                var ships = objectOfStarships.results;
-
-                Console.WriteLine("Var god och välj ett rymdskepp");
-                Console.WriteLine("------------------------------");
-                foreach (var ship in ships)
-                {
-                    index++;
-                    Console.WriteLine($"[{index}]\t{ship.name}\t{ship.length} m");
-
-                }
-
-                Console.WriteLine("Bläddra genom piltangent ner eller annan valfri tangent för att välja skepp");
-
-                ConsoleKeyInfo keyInfo = Console.ReadKey();
-                
-                if (keyInfo.Key == ConsoleKey.DownArrow)    
-                {
-                    index = 0;
-                    continue;
-                }
-                else
-                Console.WriteLine("Välj ett skepp genom nummer: ");
-
-                byte choosenStarship = byte.Parse(Console.ReadLine());
-
-                Console.WriteLine("Skriv in ditt registrerings nummer: ");
-                string regNr = Console.ReadLine();
-
-                // Kunden för skriva in sitt egna regnummber
-                this.Starship = new Starship(regNr, ships[choosenStarship - 1].name); // Slu7mpa fram ett eget ägarnummer
-                break;
-            }
-
-            return this;
-        }
+        
         public IFluentCustomer VisitParkingHouse(ParkingHouse parkingHouse)
         {
             _parkingHouse = parkingHouse;
@@ -94,15 +53,14 @@ namespace SpaceParkLibrary.Models
             
             return this;
         }
-        public async Task< IFluentCustomer> SelfRegistration(Starship starship, ParkingOrder parkingOrder)
+        public async Task< IFluentCustomer> SelfRegistration()
         {
             this.InvoicePaid = false; // Default värde
 
-
-            Console.WriteLine("Här registrerar vi Namn och skepp och är det godkända stegar vi vidare...");
+            Console.WriteLine("Välkommen til parkeringshuset!");
+            Console.WriteLine("Var vänlig och registrera ditt namn och rymdskeppet du önskar parkera");
 
             string inputName = string.Empty;
-   
             bool validated = false;
 
             while (validated == false)
@@ -126,6 +84,7 @@ namespace SpaceParkLibrary.Models
 
             this.Name = CustomerValidator.RegisteredName;
 
+
             var customerOut = new Customer();
 
             customerOut = DbAccess.TryToGetExistingCustomer(this);
@@ -134,20 +93,29 @@ namespace SpaceParkLibrary.Models
             {
                 Console.WriteLine("Skriv in din emailadress: ");
                 this.Email = Console.ReadLine();
-                parkingOrder.Customer = this;
-
+                DbAccess.RegistrateCustomerIntoDB(customerOut);
             }
             else
             {
                 Console.WriteLine($"Kunden {customerOut.Name} existerar redan i registret");
-                this.Email = customerOut.Email;
-                this.Id = customerOut.Id;
-                parkingOrder.Customer = customerOut;
-                //return customerOut; returnererar den här klassen eventurellt, skulle va praktiskt
-              
+ 
             }
             Console.WriteLine("Nu har den checkat klart");
+            
+            //
+           
 
+            var customerID = DbAccess.GetCustomerId(customerOut.Name);
+            Console.WriteLine("Kund Id" + customerID);
+            this.ParkingRegistration.CustomerId = customerID;
+
+            this.Starship = await RegistrateStarship();
+            Console.WriteLine("skepp heter i reg" + this.Starship.Name);
+
+            DbAccess.RegistrateStarshipIntoDB(Starship);
+            this.ParkingRegistration.StarshipId = DbAccess.GetStarshipId(Starship.Name);
+
+            Console.WriteLine($"Registreringen är slutförd för {Name} och {Starship}.");
             // Här registreras troligtvis skeppet på något sätt
 
             //parkingOrder.Customer = this; // Våran klass kund och dens ifyllda propeties vi nyss satt åker in i parkeringsorderns kundinfo
@@ -157,36 +125,109 @@ namespace SpaceParkLibrary.Models
 
             //Om kunden inte existerar
             //Lägg till kunden till databasen
-            
+
 
 
             return this;
         }
-
-     
-
-        public IFluentCustomer ParkShip( Starship vehicle, DateTime arrivalTime, ParkingOrder parkingOrder)
+        public async Task<Starship> RegistrateStarship()
         {
-            Console.WriteLine("Här tilldelar vi platsnummer och registrerar det i databasen...");
+            byte index = 0;
 
-            // TODO: koppla upp oss till databasen och hämta en ledigplats
-            Console.WriteLine("Här hämtar vi id på parkeringsplats");
-            parkingOrder.AssignedParkingLotId = DataAccess.DbAccess.GetEmptyParkingLotsFromDB().Id;  //Tilldelar ledig plats this._parkingHouse.GetEmptyParkingLot()
+            for (int i = 0; i < 4; i++)
+            {
 
-            Console.WriteLine("Tilldelad plats     " + parkingOrder.AssignedParkingLotId);
-            parkingOrder.Starship = vehicle;
-            parkingOrder.ArrivalTime = arrivalTime;
+                var objectOfStarships = await CustomerValidator.GetAllStarships(i + 1);
+                var ships = objectOfStarships.results;
+
+                Console.WriteLine("Var god och registrera ditt rymdskepp");
+                Console.WriteLine("------------------------------");
+                foreach (var ship in ships)
+                {
+                    index++;
+                    Console.WriteLine($"[{index}]\t{ship.name}\t\t{ship.length} m");
+
+                }
+
+                Console.WriteLine("Bläddra genom piltangent ner eller annan valfri tangent för att välja skepp");
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+                //if (keyInfo.Key == ConsoleKey.DownArrow)
+                //{
+                //    index = 0;
+                //    continue;
+                //}
+                //else
+                    Console.WriteLine("Välj ett skepp genom nummer: ");
+
+                byte choosenStarship = byte.Parse(Console.ReadLine());
+
+                Console.WriteLine("Skriv in ditt registrerings nummer: ");
+                string regNr = Console.ReadLine();
+                var newStarship = new Starship(regNr, ships[choosenStarship - 1].name);// Slu7mpa fram ett eget ägarnummer
+                return newStarship;
+            }
+            return null;
+         
+        }
+        public async Task<IFluentCustomer> SelectStarship()
+        {
+            byte index = 0;
+
+            for (int i = 0; i < 4; i++)
+            {
+
+                var objectOfStarships = await CustomerValidator.GetAllStarships(i + 1);
+                var ships = objectOfStarships.results;
+
+                Console.WriteLine("Var god och registrera ditt rymdskepp");
+                Console.WriteLine("------------------------------");
+                foreach (var ship in ships)
+                {
+                    index++;
+                    Console.WriteLine($"[{index}]\t{ship.name}\t\t{ship.length} m");
+
+                }
+
+                Console.WriteLine("Bläddra genom piltangent ner eller annan valfri tangent för att välja skepp");
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+                if (keyInfo.Key == ConsoleKey.DownArrow)
+                {
+                    index = 0;
+                    continue;
+                }
+                else
+                    Console.WriteLine("Välj ett skepp genom nummer: ");
+
+                byte choosenStarship = byte.Parse(Console.ReadLine());
+
+                Console.WriteLine("Skriv in ditt registrerings nummer: ");
+                string regNr = Console.ReadLine();
+
+            
+                this.Starship = new Starship(regNr, ships[choosenStarship - 1].name);
+              
+                this.ParkingRegistration.StarshipId = DbAccess.GetStarshipId(Starship.Name);// Slu7mpa fram ett eget ägarnummer
+                break;
+            }
+
+            return this;
+        }
 
 
-            //Console.WriteLine($"Välkommen {Name}!");
-            //Console.WriteLine($"Din {vehicle.Name} är parkerad på plats {parkingOrder.AssignedParkingLotId} och därmed är den klassas som occupied: {parkingOrder.AssignedParkingLotId}");
+        public IFluentCustomer ParkShip(DateTime arrivalTime)
+        {
+         
+            this.ParkingRegistration.AssignedParkingLotId = DataAccess.DbAccess.GetEmptyParkingLotsFromDB().Id;  //Tilldelar ledig plats this._parkingHouse.GetEmptyParkingLot()
 
+            Console.WriteLine($"Tilldelad plats: {ParkingRegistration.AssignedParkingLotId}");
+         
 
-
-            //Console.WriteLine($"Antal lediga platser för nuvarande är: {_parkingHouse.VacantParkingLots}");
-
-            //Console.WriteLine("Här startas fejklockan...");
-
+            this.ParkingRegistration.ArrivalTime = arrivalTime;
+            Console.WriteLine("Parkeringens starttid påbörjas:" + ParkingRegistration.ArrivalTime);
             this.parkingTimer.Start();
 
             return this;
@@ -201,20 +242,19 @@ namespace SpaceParkLibrary.Models
         }
 
 
-        public IFluentCustomer LeavePark(DateTime departureTime, ParkingOrder parkingOrder)
+        public IFluentCustomer LeavePark(DateTime departureTime)
         {
-            Console.WriteLine("Här beslutar vi att hämta bilen och fejklockan stoppas...");
-
+            
 
             parkingTimer.Stop();
             TimeSpan elapsedParkingTime = parkingTimer.Elapsed;
             Console.WriteLine("ParkingTid i sekunder" + elapsedParkingTime.Seconds);
 
-            DateTime elapsedParkingTimeInHours = parkingOrder.ArrivalTime.AddHours(elapsedParkingTime.Seconds);
-            parkingOrder.DepartureTime = elapsedParkingTimeInHours;
+            DateTime elapsedParkingTimeInHours = ParkingRegistration.ArrivalTime.AddHours(elapsedParkingTime.Seconds);
+            this.ParkingRegistration.DepartureTime = elapsedParkingTimeInHours;
 
-            Console.WriteLine("Id för plats ska uppdateras:      " + parkingOrder.AssignedParkingLotId);
-            DbAccess.UpdateVacancyInParkinLot(parkingOrder.AssignedParkingLotId, false);
+            Console.WriteLine("Id för plats ska uppdateras:      " + ParkingRegistration.AssignedParkingLotId);
+            DbAccess.UpdateVacancyInParkinLot(ParkingRegistration.AssignedParkingLotId, false);
 
 
             //Console.WriteLine("Är vi kreditvärdiga så genereras en faktura baserad på ankomsttid och avgångstid, adress lämnas här ev. ...");

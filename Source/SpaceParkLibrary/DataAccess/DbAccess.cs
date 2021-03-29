@@ -13,6 +13,38 @@ namespace SpaceParkLibrary.DataAccess
         {
             throw new NotImplementedException();
         }
+        public static void RegistrateCustomerIntoDB(Customer newCustomer)
+        {
+            var context = new ParkingContext();
+            context.Customers.Add(newCustomer);
+            context.SaveChanges();
+
+        }
+        public static int GetCustomerId(string customerName)
+        {
+            var context = new ParkingContext();
+
+            var newCustomer = context.Customers.Where(n => n.Name == customerName).FirstOrDefault();
+
+            return newCustomer.Id;
+
+        }
+        public static void RegistrateStarshipIntoDB(Starship newShip)
+        {
+            var context = new ParkingContext();
+            context.Starships.Add(newShip);
+            context.SaveChanges();
+
+        }
+        public static int GetStarshipId(string shipName)
+        {
+            var context = new ParkingContext();
+
+            var newShip = context.Starships.Where(n => n.Name == shipName).FirstOrDefault();
+
+            return newShip.Id;
+
+        }
         public static ParkingLot GetEmptyParkingLotsFromDB()
         {
             
@@ -62,6 +94,7 @@ namespace SpaceParkLibrary.DataAccess
             else
                 return inputCustomer;
         }
+  
 
         public static void ShowAllParkingsInDatabase()
         {
@@ -116,26 +149,8 @@ namespace SpaceParkLibrary.DataAccess
         {
 
             Console.WriteLine("Add order to database");
-
-            var context = new ParkingContext();
-
-            //Customer newCustomer = context.Customers.Single(x => x.Id == order.CustomerId);
-
-            Customer newCustomer = context.Customers.Where(x => x.Id == order.Customer.Id).FirstOrDefault();
-            Console.WriteLine($"Ny kundens ID{newCustomer.Id} - Parkeringorders KUND ID {order.Customer.Id}");
-            Console.ReadKey();
-
-            newCustomer = (newCustomer != null) ? newCustomer : order.Customer;
-
-            ParkingOrder newOrder = new ParkingOrder
-            {
-                Customer = newCustomer, // expression
-                Starship = order.Starship, // expression
-                ArrivalTime = order.ArrivalTime,
-                DepartureTime = order.DepartureTime,
-                AssignedParkingLot = order.AssignedParkingLot, // expression
-            };
-            context.ParkingOrders.Add(newOrder);
+            var context = new ParkingContext();     
+            context.ParkingOrders.Add(order);
 
             Console.WriteLine("Press a key to save to database");
             Console.ReadKey();
