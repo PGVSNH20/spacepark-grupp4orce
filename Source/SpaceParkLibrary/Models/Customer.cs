@@ -53,7 +53,7 @@ namespace SpaceParkLibrary.Models
             
             return this;
         }
-        public async Task< IFluentCustomer> SelfRegistration()
+        public async Task<IFluentCustomer> SelfRegistration()
         {
             this.InvoicePaid = false; // Default värde
 
@@ -162,7 +162,7 @@ namespace SpaceParkLibrary.Models
                     Console.WriteLine("Välj ett skepp genom nummer: ");
 
                 byte choosenStarship = byte.Parse(Console.ReadLine());
-
+                
                 Console.WriteLine("Skriv in ditt registrerings nummer: ");
                 string regNr = Console.ReadLine();
                 var newStarship = new Starship(regNr, ships[choosenStarship - 1].name);// Slu7mpa fram ett eget ägarnummer
