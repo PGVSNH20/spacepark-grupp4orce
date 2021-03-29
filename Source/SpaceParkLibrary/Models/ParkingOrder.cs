@@ -11,10 +11,10 @@ namespace SpaceParkLibrary.Models
         public int Id { get; set; }
 
         // Navigation properties
-        //public int CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public Customer Customer { get; set; } 
 
-        //public int StarshipID { get; set; }
+        public int StarshipId { get; set; }
         public Starship Starship { get; set; } 
 
         public DateTime ArrivalTime { get; set; }
@@ -22,13 +22,13 @@ namespace SpaceParkLibrary.Models
 
         // Navigation properties
         public int AssignedParkingLotId { get; set; }
-        //public ParkingLot AssignedParkingLot{ get; set; }
+        public ParkingLot AssignedParkingLot{ get; set; }
 
         public decimal ParkingFee  { get; set; }
 
         public override string ToString()
         {
-            return $"Id: {Id} - KundID: {Customer} - SkeppID: {Starship} - Ankomst: {ArrivalTime} - Parkeringsplats {AssignedParkingLotId}"; // 
+            return $"Id: {Id} - KundID: {CustomerId} - SkeppID: {StarshipId} - Ankomst: {ArrivalTime} - Parkeringsplats {AssignedParkingLotId}"; // 
         }
     }
 }

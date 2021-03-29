@@ -114,11 +114,28 @@ namespace SpaceParkLibrary.DataAccess
 
         public static void AddSingleOrderToDatabase(ParkingOrder order)
         {
+
             Console.WriteLine("Add order to database");
 
             var context = new ParkingContext();
 
-            context.ParkingOrders.Add(order);
+            //Customer newCustomer = context.Customers.Single(x => x.Id == order.CustomerId);
+
+            Customer newCustomer = context.Customers.Where(x => x.Id == order.Customer.Id).FirstOrDefault();
+            Console.WriteLine($"Ny kundens ID{newCustomer.Id} - Parkeringorders KUND ID {order.Customer.Id}");
+            Console.ReadKey();
+
+            newCustomer = (newCustomer != null) ? newCustomer : order.Customer;
+
+            ParkingOrder newOrder = new ParkingOrder
+            {
+                Customer = newCustomer, // expression
+                Starship = order.Starship, // expression
+                ArrivalTime = order.ArrivalTime,
+                DepartureTime = order.DepartureTime,
+                AssignedParkingLot = order.AssignedParkingLot, // expression
+            };
+            context.ParkingOrders.Add(newOrder);
 
             Console.WriteLine("Press a key to save to database");
             Console.ReadKey();

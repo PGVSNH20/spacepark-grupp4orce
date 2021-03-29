@@ -18,26 +18,24 @@ namespace SpacePark
         static async Task Main(string[] args)
         {
 
-            IFluentCustomer customer = new Customer();
+            IFluentCustomer customer1 = new Customer();
 
-
-            customer.SelectStarship().Wait();
-            Starship vehicle = customer.Starship;
+            customer1.SelectStarship().Wait();
+            Starship vehicle = customer1.Starship;
 
             var spacePort = new ParkingHouse("Space Port");
             var parkingOrder = new ParkingOrder();
 
-            customer
-                .VisitParkingHouse(spacePort)
+
+
+            customer1
                 .SelfRegistration(vehicle, parkingOrder).Wait();
 
-
-            customer
+            customer1
                 .ParkShip(vehicle, DateTime.Now, parkingOrder)
                 .DoingStuffOutsideParkingHousePerMinute(120);
 
-            customer.LeavePark(DateTime.Now.AddHours(2), parkingOrder); // Total tid för parkering och slutkostnad uppdateras till databasen här
-
+            customer1.LeavePark(DateTime.Now.AddHours(2), parkingOrder); // Total tid för parkering och slutkostnad uppdateras till databasen här
 
 
             DbAccess.AddSingleOrderToDatabase(parkingOrder);
