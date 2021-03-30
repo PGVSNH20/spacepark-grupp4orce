@@ -1,10 +1,8 @@
-using System;
-using Xunit;
-using SpaceParkLibrary;
-using SpaceParkLibrary.Utilities;
-using SpaceParkLibrary.Models;
 using SpaceParkLibrary.DataAccess;
-//using SpaceParkConsoleUI;
+using SpaceParkLibrary.Models;
+using SpaceParkLibrary.Utilities;
+using Xunit;
+
 
 namespace SpaceParkConsoleUITest
 {
@@ -30,7 +28,7 @@ namespace SpaceParkConsoleUITest
         }
         [Theory]
         [InlineData("Lucky Luke")]
-        [InlineData("Janne Långben")]
+        [InlineData("Captain Kirk")]
         //[InlineData("Darth")]
         [InlineData("Leila Oregano")]
         public async void Reject_As__A_Valid_SW_Name(string userInput)

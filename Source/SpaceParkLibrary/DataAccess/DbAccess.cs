@@ -1,8 +1,6 @@
 ﻿using SpaceParkLibrary.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SpaceParkLibrary.DataAccess
@@ -97,10 +95,10 @@ namespace SpaceParkLibrary.DataAccess
 
         public static void ShowAllParkingsInDatabase()
         {
-            Console.WriteLine("Fetch and show all orders");
+
+            Console.WriteLine("\nFetch and show all orders");
 
             // Access dbset
-
             var context = new ParkingContext();
 
             Console.WriteLine("Press a key to print orders\n");
@@ -132,7 +130,7 @@ namespace SpaceParkLibrary.DataAccess
                               }).ToList();
 
 
-
+               
                 foreach (var parking in allParkings)
                 {
 
@@ -140,9 +138,12 @@ namespace SpaceParkLibrary.DataAccess
 
                 }
                 Console.WriteLine();
+                Console.WriteLine("| KundID | Namn | SkeppID | Skepp | ParkeringsId | Ankomstid | Avgångstid | Avgift |");
                 foreach (var cust in dataDb)
                 {
-                    Console.WriteLine($"{cust.Id} - {cust.Name} - {cust.ShipId} - {cust.Ship} - {cust.Email} - {cust.ParkingOrderId} - {cust.Arrival} - {cust.Departure} - {cust.Fee}");
+                 
+                    Console.WriteLine($"{cust.Id} - {cust.Name} - {cust.Email} - {cust.ShipId} - {cust.Ship}  - " +
+                        $"{cust.ParkingOrderId} - {cust.Arrival} - {cust.Departure} - {cust.Fee}");
 
                 }
 
@@ -191,7 +192,7 @@ namespace SpaceParkLibrary.DataAccess
         public static void AddSingleOrderToDatabase(ParkingOrder order)
         {
 
-            Console.WriteLine("Add order to database");
+            Console.WriteLine("\nAdd order to database");
             var context = new ParkingContext();
             context.ParkingOrders.Add(order);
 
@@ -199,7 +200,7 @@ namespace SpaceParkLibrary.DataAccess
             Console.ReadKey();
             // DONE: Save change in database
             context.SaveChanges();
-            Console.WriteLine("Order saved to database");
+            Console.WriteLine("\nOrder saved to database");
         }
 
         public static int GetAmountOfEmptyParkingLots()

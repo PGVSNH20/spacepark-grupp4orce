@@ -1,12 +1,11 @@
-﻿using SpaceParkLibrary.Interfaces;
+﻿using SpaceParkLibrary.DataAccess;
+using SpaceParkLibrary.Interfaces;
 using SpaceParkLibrary.Utilities;
 using System;
-using System.Threading.Tasks;
-using SpaceParkLibrary.DataAccess;
-using System.Collections.Generic;
-using System.Threading;
 using System.Diagnostics;
 using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SpaceParkLibrary.Models
 {
@@ -16,10 +15,6 @@ namespace SpaceParkLibrary.Models
 
 
         public Stopwatch parkingTimer = new Stopwatch();
-
-
-        // Våran kund som parkerar med skepp, ankomstid och sluttid för parkering,
-        // har kreditvärdighet, samt betalat faktura eller ej
 
         public Customer()
         {
@@ -48,9 +43,9 @@ namespace SpaceParkLibrary.Models
         {
             this.InvoicePaid = false; // Default värde
 
-            Console.WriteLine("Välkommen till Rymdparkeringshuset!");
+            Console.WriteLine($"Välkommen till rymdparkeringshuset {_parkingHouse.Name}!");
             Console.WriteLine("=========================================================================================\n");
-            Console.WriteLine($"Just nu har vi {ParkingHouse.AmountOfEmptylots} av totalt {ParkingHouse.TotalParkingsLots}\n");
+            Console.WriteLine($"Just nu har vi {ParkingHouse.AmountOfEmptylots} av totalt {ParkingHouse.TotalParkingsLots} platser.\n");
             Console.WriteLine("Var vänlig och registrera ditt namn och rymdskeppet du önskar parkera.\n");
 
             string inputName = string.Empty;
@@ -127,16 +122,16 @@ namespace SpaceParkLibrary.Models
                     const string format = "[{0,2}]{1,50}{2,10}m";
 
                     index++;
-                    //Console.WriteLine($"[{index}]".PadRight(10) + $"{ship.name,30}" + $"{ship.length,10} m");
                     Console.WriteLine(string.Format(format, index, ship.name, ship.length));
 
                 }
                 Console.WriteLine("----------------------------------------------------------------------------------------\n");
                 Console.WriteLine("Bläddra genom nedåt- eller uppåtpilen för att navigera bland förvalda skepp.\n");
                 Console.WriteLine("Tryck på enter för att välja skepp.");
+                Console.WriteLine( );
                 ConsoleKeyInfo keyInfo = Console.ReadKey();
 
-                if (keyInfo.Key == ConsoleKey.DownArrow)
+                if (keyInfo.Key == ConsoleKey.DownArrow && i != ships.Count - 1)
                 {
                     index = 0;
                     continue;
@@ -149,6 +144,7 @@ namespace SpaceParkLibrary.Models
                 }
                 else if (keyInfo.Key == ConsoleKey.Enter)
                 {
+                    Console.Write("Välj skepp genom index: ");
                     choosenStarship = int.Parse(Console.ReadLine());
                 }
                 else { index = 0; i = 0; continue; } // Default för felnavigering
